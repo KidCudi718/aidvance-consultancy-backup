@@ -45,6 +45,65 @@ function sweep(now: number): void {
   }
 }
 
+type Minted = { transportToken: string; transportUrl: string };
+
+/**
+ * One attempt at POST /v1/sessions.
+ *
+ * The Idempotency-Key is required whenever the session points at a
+ * speech-to-speech agent: it lets a bootstrap that times out be retried without
+ * quietly opening a second session. Each attempt gets its own key, because a
+ * retry in a different mode is a genuinely different request.
+ */
+async function mint(
+  apiKey: string,
+  body: Record<string, unknown>,
+): Promise<{ ok: true; data: Minted } | { ok: false; status: number; detail: string }> {
+  const response = await fetch("https://api.speko.dev/v1/sessions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "Idempotency-Key": crypto.randomUUID(),
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    return { ok: false, status: response.status, detail: detail.slice(0, 500) };
+  }
+
+  const payload = (await response.json()) as Partial<Minted>;
+  if (!payload.transportToken || !payload.transportUrl) {
+    return { ok: false, status: 502, detail: "missing transport credentials" };
+  }
+
+  return {
+    ok: true,
+    data: {
+      transportToken: payload.transportToken,
+      transportUrl: payload.transportUrl,
+    },
+  };
+}
+
+/**
+ * Speko marks some refusals retryable — notably when its provider-direct
+ * speech-to-speech bootstrap is unavailable. Cascade assembles the same call
+ * out of separate speech, model and voice providers and keeps working, so a
+ * retryable refusal is worth one more attempt rather than an apology.
+ */
+function worthRetryingInCascade(status: number, detail: string): boolean {
+  if (detail.includes("S2S_SESSION_PLAN_UNAVAILABLE")) {
+    return true;
+  }
+  if (detail.includes('"retryable":true')) {
+    return true;
+  }
+  return status >= 500;
+}
+
 export async function POST(request: Request): Promise<Response> {
   const apiKey = process.env.SPEKO_API_KEY;
   const agentId = process.env.SPEKO_AGENT_ID;
@@ -71,24 +130,25 @@ export async function POST(request: Request): Promise<Response> {
     return new Response("already had a turn", { status: 429 });
   }
 
-  let response: Response;
+  const base = {
+    agentId,
+    ttlSeconds: SESSION_TTL_SECONDS,
+    metadata: { surface: "aidvance-homepage" },
+  };
+
+  let result;
   try {
-    response = await fetch("https://api.speko.dev/v1/sessions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        // Required when the session points at a speech-to-speech agent: it lets
-        // a bootstrap that times out be retried without opening a second
-        // session. Without it the API rejects the request outright.
-        "Idempotency-Key": crypto.randomUUID(),
-      },
-      body: JSON.stringify({
-        agentId,
-        ttlSeconds: SESSION_TTL_SECONDS,
-        metadata: { surface: "aidvance-homepage" },
-      }),
-    });
+    // First choice: whatever run mode the agent itself is set to.
+    result = await mint(apiKey, base);
+
+    if (!result.ok && worthRetryingInCascade(result.status, result.detail)) {
+      console.warn(
+        "Speko refused the agent's own run mode, retrying in cascade",
+        result.status,
+        result.detail,
+      );
+      result = await mint(apiKey, { ...base, mode: "cascade" });
+    }
   } catch (error) {
     console.error(
       "Speko session mint failed",
@@ -97,32 +157,15 @@ export async function POST(request: Request): Promise<Response> {
     return new Response("voice unavailable", { status: 503 });
   }
 
-  if (!response.ok) {
-    // Log the body, not just the status. A bare status code tells you nothing
-    // about why the call was refused.
-    const detail = await response.text().catch(() => "");
-    console.error("Speko session rejected", response.status, detail.slice(0, 500));
-    return new Response("voice unavailable", { status: 503 });
-  }
-
-  const payload = (await response.json()) as {
-    transportToken?: string;
-    transportUrl?: string;
-  };
-
-  if (!payload.transportToken || !payload.transportUrl) {
-    console.error("Speko session missing transport credentials");
+  if (!result.ok) {
+    console.error("Speko session rejected", result.status, result.detail);
     return new Response("voice unavailable", { status: 503 });
   }
 
   lastSeen.set(caller, now);
   daily.count += 1;
 
-  return Response.json(
-    {
-      transportToken: payload.transportToken,
-      transportUrl: payload.transportUrl,
-    },
-    { headers: { "Cache-Control": "no-store" } },
-  );
+  return Response.json(result.data, {
+    headers: { "Cache-Control": "no-store" },
+  });
 }
