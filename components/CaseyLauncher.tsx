@@ -217,7 +217,7 @@ export function CaseyLauncher({
               className={styles.stopBtn}
               onClick={() => void teardown()}
             >
-              Stop
+              End conversation
             </button>
           </div>
         </>
@@ -238,6 +238,12 @@ export function CaseyLauncher({
               {connecting ? "Connecting…" : "Start talking"}
             </button>
           </div>
+          {/* The label reads as push-to-talk to anyone who has sent a voice
+              note. It isn't — say so plainly. */}
+          <p className={styles.hint}>
+            Press once — no need to hold it. Talk normally; she&apos;ll wait
+            until you&apos;re finished.
+          </p>
           {blocked ? (
             <p className={styles.note} role="status">
               {CASEY_BLOCK_COPY[blocked]}
