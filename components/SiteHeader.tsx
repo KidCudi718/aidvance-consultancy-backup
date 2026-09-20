@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useId, useState } from "react";
 import { Logo } from "@/components/Logo";
-import { assessmentMailto, nav } from "@/lib/site";
+import { nav } from "@/lib/site";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -21,9 +21,9 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a className="btn btn--solid" href={assessmentMailto()}>
-            Request an assessment
-          </a>
+          <Link className="btn btn--solid" href="/contact/">
+            Get in touch
+          </Link>
         </nav>
         <button
           className="menu-toggle"
@@ -42,9 +42,9 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a className="btn btn--solid" href={assessmentMailto()} onClick={() => setOpen(false)}>
-            Request an assessment
-          </a>
+          <Link className="btn btn--solid" href="/contact/" onClick={() => setOpen(false)}>
+            Get in touch
+          </Link>
         </nav>
       ) : null}
     </header>

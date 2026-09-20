@@ -1,6 +1,6 @@
 # Aidvance Consultancy
 
-Private **backup** marketing and resource site for [Aidvance Consultancy](https://aidvance.xyz). This repository is a parallel build. Do not treat it as a merge source for any other Aidvance project.
+Private **backup** marketing site for [Aidvance Consultancy](https://aidvance.xyz). This repository is a parallel build. Do not treat it as a merge source for any other Aidvance project.
 
 Intended public hostname: **aidvance.xyz**. DNS is the owner’s choice later. This repo does not configure DNS.
 
@@ -25,11 +25,12 @@ npm run lint
 
 A production-ready Next.js (App Router, TypeScript) site:
 
-- Owner-facing pages (home, assessment, contact) in black and white
-- Resource index plus five short notes that help before anyone hires
-- **AI Opportunity Assessment** as the front door (no prices on the site)
-- Contact via `mailto:david.choukroun2@gmail.com`
-- Official wordmark in the header, footer, favicon, and Open Graph image (see `public/brand/`)
+- Homepage journey from the signed-off handoff (picker, live verdict, assessment, library)
+- Six library guides at canonical `/library/.../` routes
+- Assessment and unnamed human contact pages
+- Official wordmark only (`public/brand/`)
+- Black and white ledger shell
+- Contact via `mailto:hello@aidvance.xyz` (placeholder)
 
 Preview hosting (Vercel or similar) is enough. Point `aidvance.xyz` at a host only when you decide to.
 

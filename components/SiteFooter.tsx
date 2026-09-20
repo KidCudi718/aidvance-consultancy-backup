@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { articles } from "@/lib/articles";
-import { site } from "@/lib/site";
+import { nav, site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -10,43 +9,39 @@ export function SiteFooter() {
         <div>
           <Logo size="footer" />
           <p className="muted footer-blurb">
-            For owners who need to know which AI tools to skip — and how to get
-            hours back each week.
-          </p>
-          <p className="muted">
-            {site.person.name}, {site.person.role}
+            No newsletter. No pop-ups. No pitch you didn&apos;t ask for.
           </p>
         </div>
         <div>
-          <p className="kicker">Practice</p>
+          <p className="kicker">On this site</p>
           <ul>
-            <li>
-              <Link href="/assessment">{site.offer.name}</Link>
-            </li>
-            <li>
-              <Link href="/#method">How it works</Link>
-            </li>
-            <li>
-              <Link href="/contact">Talk to us</Link>
-            </li>
+            {nav.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href}>{item.label}</Link>
+              </li>
+            ))}
             <li>
               <a href={`mailto:${site.email}`}>{site.email}</a>
             </li>
           </ul>
         </div>
         <div>
-          <p className="kicker">Resources</p>
+          <p className="kicker">Library</p>
           <ul>
-            {articles.map((article) => (
-              <li key={article.slug}>
-                <Link href={`/resources/${article.slug}`}>{article.shortTitle}</Link>
-              </li>
-            ))}
+            <li>
+              <Link href="/library/">All six guides</Link>
+            </li>
+            <li>
+              <Link href="/assessment/">The assessment</Link>
+            </li>
+            <li>
+              <Link href="/contact/">Get in touch</Link>
+            </li>
           </ul>
         </div>
       </div>
       <div className="shell fine">
-        © {new Date().getFullYear()} {site.name}
+        © {site.year} {site.name} · {site.city}
       </div>
     </footer>
   );

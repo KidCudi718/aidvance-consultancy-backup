@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { assessmentMailto, site, talkMailto } from "@/lib/site";
+import { contactMailto, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Write to ${site.person.name} at ${site.email}. A short note is enough.`,
-  alternates: { canonical: "/contact" },
+  description: `You're writing to one person, not a support queue. Write to ${site.email}.`,
+  alternates: { canonical: "/contact/" },
 };
 
 export default function ContactPage() {
@@ -13,25 +13,23 @@ export default function ContactPage() {
     <section className="contact-split" aria-label="Contact">
       <div className="contact-split__ink">
         <div>
-          <p className="kicker">Talk to us</p>
-          <h1 className="display display--md">A short note is enough.</h1>
+          <p className="kicker">Contact</p>
+          <h1 className="display display--md">Write like a person. So will we.</h1>
           <p className="lede">
-            No form. No queue theatre. Write in plain language. {site.person.name}{" "}
-            will answer.
+            You&apos;re writing to one person, not a support queue. Whoever
+            reads it is the same person who&apos;d do the work.
           </p>
         </div>
         <div>
-          <p className="person__role person__role--on-ink">{site.person.role}</p>
-          <p className="person__name">{site.person.name}</p>
           <a className="email" href={`mailto:${site.email}`}>
             {site.email}
           </a>
           <div className="actions">
-            <a className="btn btn--invert" href={assessmentMailto()}>
-              Request an assessment
+            <a className="btn btn--invert" href={contactMailto()}>
+              Ask a question
             </a>
-            <a className="btn btn--invert" href={talkMailto()}>
-              Talk to us
+            <a className="btn btn--invert" href={contactMailto("The Assessment")}>
+              Ask about the assessment
             </a>
           </div>
         </div>
@@ -42,16 +40,12 @@ export default function ContactPage() {
         <div className="prose prose--flush">
           <ul>
             <li>What the business sells.</li>
-            <li>The work that feels slow or expensive.</li>
-            <li>Tools you already pay for.</li>
-            <li>What we should not look at.</li>
+            <li>The work that eats the week.</li>
+            <li>Whether you want a look, or just a straight answer.</li>
           </ul>
           <p>
-            Missing pieces are fine. If you want a template, use{" "}
-            <Link href="/resources/how-to-brief-a-consultant">
-              the briefing note
-            </Link>
-            .
+            Missing pieces are fine. If you would rather read first, start with{" "}
+            <Link href="/library/">the library</Link>.
           </p>
         </div>
       </div>

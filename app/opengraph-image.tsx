@@ -50,7 +50,7 @@ export default async function OpenGraphImage() {
               maxWidth: 920,
             }}
           >
-            Know which AI tools to skip. Get hours back each week.
+            Feel like your competitors are ahead of you on AI? They're not.
           </div>
           <div
             style={{

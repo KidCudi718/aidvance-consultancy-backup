@@ -1,18 +1,18 @@
 import type { MetadataRoute } from "next";
-import { articles } from "@/lib/articles";
+import { guidePath, guides } from "@/lib/guides";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/assessment", "/resources", "/contact"].map((path) => ({
-    url: `${site.url}${path || "/"}`,
-    lastModified: "2026-04-09",
+  const pages = ["/", "/assessment/", "/library/", "/contact/"].map((path) => ({
+    url: `${site.url}${path}`,
+    lastModified: "2026-09-01",
     changeFrequency: "monthly" as const,
-    priority: path === "" ? 1 : 0.7,
+    priority: path === "/" ? 1 : 0.7,
   }));
 
-  const notes = articles.map((article) => ({
-    url: `${site.url}/resources/${article.slug}`,
-    lastModified: article.updated,
+  const notes = guides.map((guide) => ({
+    url: `${site.url}${guidePath(guide.slug)}`,
+    lastModified: guide.updated,
     changeFrequency: "yearly" as const,
     priority: 0.6,
   }));

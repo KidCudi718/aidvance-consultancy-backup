@@ -1,173 +1,97 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { assessmentMailto, site, talkMailto } from "@/lib/site";
+import { contactMailto, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: site.offer.name,
   description:
-    "A short call, a look at how the work actually runs, and a written go / no-go plan. No tool upsell. No obligation to continue.",
-  alternates: { canonical: "/assessment" },
+    "One fixed fee, agreed before we start. Five business days. You keep everything either way — whether or not we ever work together again.",
+  alternates: { canonical: "/assessment/" },
 };
-
-const faqs = [
-  {
-    q: "Do I have to buy software after?",
-    a: "No. The memo can say “keep what you have,” “drop this seat,” or “hire a person.” We are not paid to recommend a product.",
-  },
-  {
-    q: "How long does this take?",
-    a: "A short call, then a written plan you can read in one sitting. You do not need to clear a week.",
-  },
-  {
-    q: "What do I need to prepare?",
-    a: "What you sell, who does the work, tools you already pay for, and one messy lane. A recent late invoice or unused subscription is enough.",
-  },
-  {
-    q: "What if the answer is “do nothing”?",
-    a: "That is a valid result. You still keep the memo. We will not invent work to stay in the room.",
-  },
-  {
-    q: "Who will I talk to?",
-    a: `${site.person.name}, ${site.person.role}. ${site.person.line}`,
-  },
-  {
-    q: "Is this a long retainer?",
-    a: "No. The assessment stands on its own. Anything after that is a separate, optional piece of work.",
-  },
-] as const;
 
 export default function AssessmentPage() {
   return (
     <>
       <section className="article-hero">
         <div className="shell">
-          <p className="kicker">The offer</p>
-          <h1>{site.offer.name}</h1>
+          <p className="kicker">The Assessment</p>
+          <h1>Want someone to just look at it for you?</h1>
           <p className="lede">
-            {site.offer.duration}. You keep the plan even if you never hire us
-            again.
+            One fixed fee, agreed before we start. Five business days. You keep
+            everything either way — whether or not we ever work together again.
           </p>
-          <div className="actions">
-            <a className="btn btn--solid" href={assessmentMailto()}>
-              Request an assessment
-            </a>
-            <a className="btn" href={talkMailto()}>
-              Talk to us
-            </a>
-          </div>
         </div>
       </section>
 
-      <section className="band--ink method-band" id="process">
-        <div className="shell">
-          <p className="kicker">The process</p>
-          <h2 className="display display--md">Same four steps as the home page. No surprises.</h2>
-        </div>
-      </section>
       <ol className="steps-strip">
         <li className="step-panel">
           <span className="step-panel__n">01</span>
-          <h3>Short call</h3>
-          <p>You tell us what you sell and what feels slow.</p>
+          <h3>A working call, not a sales call</h3>
+          <p>
+            Ninety minutes on how the work really gets done — who touches what,
+            where it stalls, what gets typed twice. Most owners tell us nobody
+            had ever asked.
+          </p>
         </li>
         <li className="step-panel">
           <span className="step-panel__n">02</span>
-          <h3>We map the work</h3>
-          <p>How the lane actually runs, including the exceptions.</p>
+          <h3>We take your week apart</h3>
+          <p>
+            Every repeating task goes in one of three piles: fix it now, look at
+            it later, leave it alone. The third pile is usually the biggest, and
+            we&apos;ll say so.
+          </p>
         </li>
         <li className="step-panel">
           <span className="step-panel__n">03</span>
-          <h3>Go / no-go plan</h3>
-          <p>A one-to-two page memo, not a forty-slide performance.</p>
+          <h3>You get it in writing, in plain English</h3>
+          <p>
+            What we found, what to do about it, and in what order. No jargon, no
+            vendor logos. Every number in it is a number you gave us.
+          </p>
         </li>
         <li className="step-panel">
           <span className="step-panel__n">04</span>
-          <h3>You decide</h3>
-          <p>No retainer to start. Implementation only if you ask.</p>
+          <h3>Then it&apos;s yours</h3>
+          <p>
+            Nothing to cancel and nothing to renew. You can hand the plan to
+            anyone — us, someone else, or nobody.
+          </p>
         </li>
       </ol>
 
-      <section className="section" id="memo">
+      <div className="price-line">
         <div className="shell">
-          <p className="kicker">The deliverable</p>
-          <h2 className="display display--md">
-            What is on the page you take home.
-          </h2>
-        </div>
-        <div className="memo">
-          <div className="memo__rule">
-            <span>Aidvance Consultancy</span>
-            <span>Decision memo</span>
+          <p>
+            One fixed fee, agreed in writing before anything starts. Ask and
+            you&apos;ll have a number the same day — there&apos;s no discovery
+            funnel to go through first.
+          </p>
+          <div className="actions">
+            <a className="btn btn--solid" href={contactMailto("The Assessment")}>
+              Ask for a number
+            </a>
+            <a className="text-link" href={contactMailto()}>
+              Or just ask me a question
+            </a>
           </div>
-          <ol className="memo__list">
-            <li>
-              <strong>What we looked at</strong>
-              <span>The lane you named, plus the ugly exceptions.</span>
-            </li>
-            <li>
-              <strong>Tools to keep, pause, or drop</strong>
-              <span>Including software nobody opened last month.</span>
-            </li>
-            <li>
-              <strong>Hours you can get back</strong>
-              <span>Set beside a change a busy owner can staff.</span>
-            </li>
-            <li>
-              <strong>Go / no-go on each idea</strong>
-              <span>Yes, later, or no — with a reason.</span>
-            </li>
-            <li>
-              <strong>What not to automate</strong>
-              <span>Work that gets worse when you speed it up.</span>
-            </li>
-            <li>
-              <strong>Next 90 days — optional</strong>
-              <span>One sequence. You keep the memo either way.</span>
-            </li>
-          </ol>
         </div>
-      </section>
-
-      <section className="wont">
-        <div className="shell">
-          <p className="kicker">What we will not do</p>
-          <ul className="wont__list">
-            <li>No tool upsell.</li>
-            <li>No long retainer to start.</li>
-            <li>No jargon pitch.</li>
-          </ul>
-        </div>
-      </section>
-
-      <section className="section" id="faq">
-        <div className="shell">
-          <p className="kicker">Questions owners actually ask</p>
-          <h2 className="display display--md">Straight answers.</h2>
-        </div>
-        <dl className="faq">
-          {faqs.map((item) => (
-            <div className="faq__item" key={item.q}>
-              <dt>{item.q}</dt>
-              <dd>{item.a}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      </div>
 
       <section className="band--ink contact-lockup">
         <div className="shell">
-          <p className="kicker">Start</p>
+          <p className="kicker">Next</p>
           <h2 className="display display--md">A short note is enough.</h2>
           <p className="lede lede--tight">
-            If you are still gathering notes, read the workflow audit first.
-            Come back when the lane has a name.
+            You&apos;re writing to one person, not a support queue. Whoever
+            reads it is the same person who&apos;d do the work.
           </p>
           <div className="actions">
-            <a className="btn btn--invert" href={assessmentMailto()}>
-              Request an assessment
-            </a>
-            <Link className="btn btn--invert" href="/resources/workflow-audit-before-tools">
-              Read the audit note
+            <Link className="btn btn--invert" href="/contact/">
+              Get in touch
+            </Link>
+            <Link className="btn btn--invert" href="/library/">
+              Or read a guide first
             </Link>
           </div>
         </div>
