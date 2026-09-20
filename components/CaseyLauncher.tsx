@@ -179,11 +179,11 @@ export function CaseyLauncher({
   const clock = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
   return (
-    <div className={styles.casey} data-speaking={speaking ? "true" : "false"}>
+    <div className={styles.casey}>
       {live ? (
         <p className={styles.status}>
-          <span>{speaking ? "Casey" : "You"} · {clock}</span>
           <span>{speaking ? "Casey is talking" : "Listening"}</span>
+          <span>{clock}</span>
         </p>
       ) : null}
 
@@ -224,8 +224,9 @@ export function CaseyLauncher({
       ) : (
         <>
           <p className={styles.note}>
-            I&apos;m Casey. I&apos;m an AI. I&apos;ll ask you a few questions and
-            tell you straight — including when the answer isn&apos;t AI.
+            Two minutes with Casey and she&apos;ll tell you straight which bit of
+            your week is worth fixing first — including when the answer isn&apos;t
+            AI at all.
           </p>
           <div className={styles.controls}>
             <button
@@ -238,11 +239,12 @@ export function CaseyLauncher({
               {connecting ? "Connecting…" : "Start talking"}
             </button>
           </div>
-          {/* The label reads as push-to-talk to anyone who has sent a voice
-              note. It isn't — say so plainly. */}
+          {/* The disclosure lives here rather than in her opening line: the
+              visitor reads it before pressing, so she can open like a person
+              instead of a compliance notice. She never denies it if asked. */}
           <p className={styles.hint}>
             Press once — no need to hold it. Talk normally; she&apos;ll wait
-            until you&apos;re finished.
+            until you&apos;re finished. Casey is an AI assistant.
           </p>
           {blocked ? (
             <p className={styles.note} role="status">
