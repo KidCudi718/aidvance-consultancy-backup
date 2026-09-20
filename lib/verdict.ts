@@ -1,4 +1,4 @@
-import { otherMailto } from "@/lib/site";
+import { contactPath } from "@/lib/site";
 
 export type PickerKey = "faq" | "quote" | "admin" | "sched" | "train" | "other";
 
@@ -85,7 +85,7 @@ export function otherVerdict(text: string): { html: string; href: string | null;
   if (trimmed) {
     return {
       html: `&ldquo;${escapeHtml(trimmed)}&rdquo; — That's not on the list, which usually means it's specific to how <em>your</em> business runs. Those are the ones worth looking at properly — no off-the-shelf tool is shaped like your week.`,
-      href: otherMailto(trimmed),
+      href: contactPath({ message: trimmed, topic: "something-else" }),
       label: "Send it to me and I'll tell you if it's fixable →",
     };
   }

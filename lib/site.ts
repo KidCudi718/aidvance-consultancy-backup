@@ -3,7 +3,6 @@ export const site = {
   shortName: "Aidvance",
   domain: "aidvance.xyz",
   url: "https://aidvance.xyz",
-  email: "hello@aidvance.xyz",
   locale: "en_US",
   city: "New York",
   year: 2026,
@@ -15,27 +14,21 @@ export const site = {
   },
 } as const;
 
-export const contactMailto = (subject = "A question", extraBody = ""): string => {
-  const body = ["Hello,", "", extraBody].join("\n");
-  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-};
+export function contactPath(options?: { message?: string; topic?: string }): string {
+  const params = new URLSearchParams();
+  const message = options?.message?.trim();
+  const topic = options?.topic?.trim();
 
-export const assessmentMailto = (extraBody = ""): string => {
-  const subject = "The Assessment";
-  const body = [
-    "Hello,",
-    "",
-    "I would like to ask about the assessment.",
-    "",
-    extraBody,
-  ].join("\n");
+  if (message) {
+    params.set("message", message);
+  }
+  if (topic) {
+    params.set("topic", topic);
+  }
 
-  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-};
-
-export const otherMailto = (text: string): string => {
-  return `mailto:${site.email}?subject=${encodeURIComponent("Something else is eating my week")}&body=${encodeURIComponent(text)}`;
-};
+  const query = params.toString();
+  return query ? `/contact/?${query}` : "/contact/";
+}
 
 export const nav = [
   { href: "/#start", label: "Start here" },

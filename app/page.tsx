@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { LibraryCards } from "@/components/LibraryCards";
 import { StartJourney } from "@/components/StartJourney";
-import { contactMailto, site } from "@/lib/site";
+import { contactPath } from "@/lib/site";
 
 const walkAway = [
   {
@@ -125,9 +125,9 @@ export default function HomePage() {
             <Link className="btn btn--solid" href="/assessment/">
               See how the assessment works →
             </Link>
-            <a className="text-link" href={contactMailto()}>
+            <Link className="text-link" href={contactPath()}>
               Or just ask me a question
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -224,16 +224,13 @@ export default function HomePage() {
             You&apos;re writing to one person, not a support queue. Whoever
             reads it is the same person who&apos;d do the work.
           </p>
-          <a className="email" href={`mailto:${site.email}`}>
-            {site.email}
-          </a>
           <div className="actions">
-            <Link className="btn btn--invert" href="/contact/">
+            <Link className="btn btn--invert" href={contactPath()}>
               Get in touch
             </Link>
-            <a className="btn btn--invert" href={contactMailto()}>
-              Or just ask me a question
-            </a>
+            <Link className="btn btn--invert" href={contactPath({ topic: "assessment" })}>
+              Ask about the assessment
+            </Link>
           </div>
         </div>
       </section>

@@ -183,9 +183,9 @@ export function StartJourney() {
                     <div>
                       <p dangerouslySetInnerHTML={{ __html: other.html }} />
                       {other.href && other.label ? (
-                        <a className="tlink" href={other.href}>
+                        <Link className="tlink" href={other.href}>
                           {other.label}
-                        </a>
+                        </Link>
                       ) : null}
                     </div>
                   </li>

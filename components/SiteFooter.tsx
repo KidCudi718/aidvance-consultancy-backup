@@ -20,9 +20,6 @@ export function SiteFooter() {
                 <Link href={item.href}>{item.label}</Link>
               </li>
             ))}
-            <li>
-              <a href={`mailto:${site.email}`}>{site.email}</a>
-            </li>
           </ul>
         </div>
         <div>

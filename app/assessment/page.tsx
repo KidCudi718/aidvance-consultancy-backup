@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { contactMailto, site } from "@/lib/site";
+import { contactPath, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: site.offer.name,
@@ -68,12 +68,12 @@ export default function AssessmentPage() {
             funnel to go through first.
           </p>
           <div className="actions">
-            <a className="btn btn--solid" href={contactMailto("The Assessment")}>
+            <Link className="btn btn--solid" href={contactPath({ topic: "assessment" })}>
               Ask for a number
-            </a>
-            <a className="text-link" href={contactMailto()}>
+            </Link>
+            <Link className="text-link" href={contactPath()}>
               Or just ask me a question
-            </a>
+            </Link>
           </div>
         </div>
       </div>

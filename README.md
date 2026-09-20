@@ -30,7 +30,7 @@ A production-ready Next.js (App Router, TypeScript) site:
 - Assessment and unnamed human contact pages
 - Official wordmark only (`public/brand/`)
 - Black and white ledger shell
-- Contact via `mailto:hello@aidvance.xyz` (placeholder)
+- Contact via the form on `/contact/` — no inbox address is published on the site
 
 Preview hosting (Vercel or similar) is enough. Point `aidvance.xyz` at a host only when you decide to.
 
