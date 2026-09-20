@@ -59,6 +59,22 @@ const CATEGORY_PHRASES: ReadonlyArray<{ key: PickerKey; phrases: string[] }> = [
     phrases: ["training people, repeating myself"],
   },
   {
+    key: "bottleneck",
+    phrases: ["everything coming through you", "everything comes through you"],
+  },
+  {
+    key: "afterhours",
+    phrases: [
+      "calls coming in after hours",
+      "coming in after hours",
+      "after-hours calls",
+    ],
+  },
+  {
+    key: "leads",
+    phrases: ["leads going cold", "leads go cold"],
+  },
+  {
     key: "other",
     phrases: ["something else"],
   },

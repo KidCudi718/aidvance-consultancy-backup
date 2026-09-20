@@ -38,9 +38,17 @@ export const verdictOrder: Exclude<PickerKey, "other">[] = [
   "leads",
 ];
 
+/**
+ * A row only carries a guide link when the library actually has a guide about
+ * that problem. Three of these do not, and pointing them at the nearest
+ * neighbour made the page look broken: you clicked "calls come in after hours"
+ * and got an article titled "stop answering the same five questions", which
+ * reads as the wrong thing opening. Better to say the honest read and send
+ * them to Casey.
+ */
 export const verdictCopy: Record<
   Exclude<PickerKey, "other">,
-  { html: string; title: string; href: string }
+  { html: string; title?: string; href?: string }
 > = {
   faq: {
     html: "The most fixable thing on this list. The same five questions come in forever. Answer each one properly <em>once</em>, put the answers where they work while you sleep, and the after-hours problem mostly solves itself.",
@@ -69,18 +77,12 @@ export const verdictCopy: Record<
   },
   bottleneck: {
     html: "The most common one on this list and the hardest to say out loud. It is almost never that nobody else <em>could</em> do it. It is that nobody has ever written down how. That is a weekend, not a software project.",
-    title: "Getting it out of your head and onto paper",
-    href: "/library/ai-for-hiring-and-onboarding/",
   },
   afterhours: {
     html: "Worth being honest about: a robot that answers wrongly at midnight does more damage than silence. What works is a real answers page, and a holding reply that says <em>a person will call you in the morning</em>.",
-    title: "Stop answering the same five questions",
-    href: "/library/stop-answering-the-same-questions/",
   },
   leads: {
     html: "Almost never a lead problem. It is a follow-up problem, and follow-up is the highest-return thing on this whole list because nobody does it. <em>One short note a week later</em> moves the win rate more than anything else you could change.",
-    title: "Quotes and estimates without the evening shift",
-    href: "/library/quotes-and-estimates/",
   },
 };
 
@@ -118,7 +120,7 @@ export function otherVerdict(text: string): { html: string; href: string | null;
   }
 
   return {
-    html: "Tell us what it is in the box above. If it isn't on this list it's usually specific to your business, and those are the ones worth a proper look.",
+    html: "Type it into the box under the grid. If it isn't on this list it's usually specific to your business, and those are the ones worth a proper look.",
     href: null,
     label: null,
   };
