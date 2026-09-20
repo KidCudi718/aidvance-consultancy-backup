@@ -1174,10 +1174,6 @@ a:hover {
   padding: 1rem 0 0.25rem;
 }
 
-.otherbox[hidden] {
-  display: none;
-}
-
 .otherbox__field {
   width: 100%;
   min-height: 3rem;

@@ -107,34 +107,36 @@ export function StartJourney() {
               );
             })}
           </div>
-          <div id="otherbox" className="otherbox" hidden={!otherPicked}>
-            <label className="visually-hidden" htmlFor={otherFieldId}>
-              In your own words — what takes the most time?
-            </label>
-            <input
-              id={otherFieldId}
-              ref={otherFieldRef}
-              className="otherbox__field"
-              type="text"
-              value={otherDraft}
-              placeholder="In your own words — what takes the most time?"
-              onChange={(event) => setOtherDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  setOtherText(otherDraft);
-                }
-              }}
-            />
-            <button
-              id="othergo"
-              className="btn btn--solid"
-              type="button"
-              onClick={() => setOtherText(otherDraft)}
-            >
-              Tell me about it
-            </button>
-          </div>
+          {otherPicked ? (
+            <div id="otherbox" className="otherbox">
+              <label className="visually-hidden" htmlFor={otherFieldId}>
+                In your own words — what takes the most time?
+              </label>
+              <input
+                id={otherFieldId}
+                ref={otherFieldRef}
+                className="otherbox__field"
+                type="text"
+                value={otherDraft}
+                placeholder="In your own words — what takes the most time?"
+                onChange={(event) => setOtherDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    setOtherText(otherDraft);
+                  }
+                }}
+              />
+              <button
+                id="othergo"
+                className="btn btn--solid"
+                type="button"
+                onClick={() => setOtherText(otherDraft)}
+              >
+                Tell me about it
+              </button>
+            </div>
+          ) : null}
           <p className="trust-chips">
             <span>Free</span>
             <span>No newsletter</span>
