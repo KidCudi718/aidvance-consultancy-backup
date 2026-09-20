@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { CaseyLauncher } from "@/components/CaseyLauncher";
 import {
   emptyVerdict,
   framingLine,
@@ -12,20 +13,25 @@ import {
   verdictOrder,
   type PickerKey,
 } from "@/lib/verdict";
+import caseyStyles from "@/components/Casey.module.css";
 
 type Picked = Partial<Record<PickerKey, boolean>>;
 
 export function StartJourney() {
   const [picked, setPicked] = useState<Picked>({});
   const [otherText, setOtherText] = useState("");
+  const [listOpen, setListOpen] = useState(false);
   const firstTick = useRef(true);
   const verdictRef = useRef<HTMLElement>(null);
   const otherFieldRef = useRef<HTMLInputElement>(null);
   const otherFieldId = useId();
   const otherPicked = Boolean(picked.other);
+  // Casey can land on "something else" mid-conversation. Stealing focus into a
+  // text field while someone is talking is hostile, so only the tap path focuses.
+  const focusOtherOnOpen = useRef(true);
 
   useEffect(() => {
-    if (otherPicked) {
+    if (otherPicked && focusOtherOnOpen.current) {
       otherFieldRef.current?.focus();
     }
   }, [otherPicked]);
@@ -45,13 +51,28 @@ export function StartJourney() {
   }, []);
 
   const toggle = (key: PickerKey) => {
+    focusOtherOnOpen.current = true;
     setPicked((current) => ({ ...current, [key]: !current[key] }));
     scrollVerdictIfNeeded();
   };
 
+  // Casey resolved a category out loud. Same verdict band, same copy — the only
+  // difference is that nobody had to tap anything.
+  const handleCaseyCategory = useCallback(
+    (key: PickerKey) => {
+      focusOtherOnOpen.current = false;
+      setPicked((current) =>
+        current[key] ? current : { ...current, [key]: true },
+      );
+      scrollVerdictIfNeeded();
+    },
+    [scrollVerdictIfNeeded],
+  );
+
   const selectedKeys = verdictOrder.filter((key) => picked[key]);
   const count = selectedKeys.length + (otherPicked ? 1 : 0);
   const other = otherPicked ? otherVerdict(otherText) : null;
+  const rowsVisible = listOpen || count > 0;
 
   return (
     <>
@@ -80,32 +101,57 @@ export function StartJourney() {
         </div>
 
         <div className="picker hp2" id="start">
-          <p className="kicker">Start here</p>
+          <p className="kicker">Start here · 2 minutes</p>
           <h2 className="display display--sm">What&apos;s eating your week?</h2>
-          <p className="picker__hint">
-            Pick everything that applies. Most weeks have more than one.
-          </p>
-          <div className="picker__rows" role="group" aria-label="What's eating your week">
-            {pickerRows.map((row) => {
-              const pressed = Boolean(picked[row.key]);
-              return (
-                <button
-                  key={row.key}
-                  type="button"
-                  className="tile"
-                  data-v={row.key}
-                  aria-pressed={pressed}
-                  onClick={() => toggle(row.key)}
-                >
-                  <span className="tile__n">{row.n}</span>
-                  <span className="tile__label">{row.label}</span>
-                  <span className="tile__mark" aria-hidden="true">
-                    {pressed ? "✓" : ""}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+
+          <CaseyLauncher onCategory={handleCaseyCategory} />
+
+          {!rowsVisible ? (
+            <button
+              type="button"
+              className={caseyStyles.listToggle}
+              aria-expanded={false}
+              aria-controls="picker-rows"
+              onClick={() => setListOpen(true)}
+            >
+              Or pick from a list instead ↓
+            </button>
+          ) : null}
+
+          {rowsVisible ? (
+            <>
+              <p className="picker__hint">
+                Pick everything that applies. Most weeks have more than one.
+              </p>
+              <div
+                id="picker-rows"
+                className="picker__rows"
+                role="group"
+                aria-label="What's eating your week"
+              >
+                {pickerRows.map((row) => {
+                  const pressed = Boolean(picked[row.key]);
+                  return (
+                    <button
+                      key={row.key}
+                      type="button"
+                      className="tile"
+                      data-v={row.key}
+                      aria-pressed={pressed}
+                      onClick={() => toggle(row.key)}
+                    >
+                      <span className="tile__n">{row.n}</span>
+                      <span className="tile__label">{row.label}</span>
+                      <span className="tile__mark" aria-hidden="true">
+                        {pressed ? "✓" : ""}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : null}
+
           {otherPicked ? (
             <div id="otherbox" className="otherbox">
               <label className="visually-hidden" htmlFor={otherFieldId}>
@@ -137,6 +183,7 @@ export function StartJourney() {
               </button>
             </div>
           ) : null}
+
           <p className="trust-chips">
             <span>Free</span>
             <span>No newsletter</span>
