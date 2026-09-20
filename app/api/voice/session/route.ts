@@ -1,3 +1,6 @@
+import { after } from "next/server";
+import { runSweep } from "@/lib/sweep";
+
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -13,7 +16,7 @@ export const dynamic = "force-dynamic";
  *   - a short cooldown per caller, so one visitor cannot loop it
  *   - a hard ceiling on sessions per day
  * When a limit trips the caller gets a clean 429 and the page quietly falls
- * back to the grid of problems. Nobody sees an error.
+ * back to the six-row list. Nobody sees an error.
  */
 
 // Sits just past the 360s client-side stop, so the client always ends the
@@ -36,6 +39,17 @@ type Bucket = { day: string; count: number };
 
 const lastSeen = new Map<string, number>();
 const daily: Bucket = { day: "", count: 0 };
+
+/**
+ * Last time this instance swept for unlogged conversations.
+ *
+ * Cron is the real schedule. This is the belt to its braces: someone starting
+ * a conversation is the best possible moment to notice that the previous one
+ * was never written down, and it costs nothing because it runs after the
+ * response has already gone out.
+ */
+let lastSweptAt = 0;
+const SWEEP_EVERY_MS = 5 * 60 * 1000;
 
 function today(): string {
   return new Date().toISOString().slice(0, 10);
@@ -101,7 +115,7 @@ async function mint(
 }
 
 /**
- * Speko marks some refusals retryable, notably when its provider-direct
+ * Speko marks some refusals retryable — notably when its provider-direct
  * speech-to-speech bootstrap is unavailable. Cascade assembles the same call
  * out of separate speech, model and voice providers and keeps working, so a
  * retryable refusal is worth one more attempt rather than an apology.
@@ -121,7 +135,7 @@ export async function POST(request: Request): Promise<Response> {
   const agentId = process.env.SPEKO_AGENT_ID;
 
   if (!apiKey || !agentId) {
-    // Not configured yet, the page falls back to the grid.
+    // Not configured yet — the page falls back to the list.
     return new Response("voice not configured", { status: 503 });
   }
 
@@ -176,6 +190,20 @@ export async function POST(request: Request): Promise<Response> {
 
   lastSeen.set(caller, now);
   daily.count += 1;
+
+  if (now - lastSweptAt > SWEEP_EVERY_MS) {
+    lastSweptAt = now;
+    after(async () => {
+      try {
+        await runSweep({ lookbackMinutes: 120 });
+      } catch (error) {
+        console.error(
+          "Opportunistic sweep failed",
+          error instanceof Error ? error.message : "unknown error",
+        );
+      }
+    });
+  }
 
   return Response.json(result.data, {
     headers: { "Cache-Control": "no-store" },
