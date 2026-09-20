@@ -174,7 +174,12 @@ export async function POST(request: Request): Promise<Response> {
   // could have failed the booking anyway — the meeting existing matters more.
   after(async () => {
     const [daveTold] = await Promise.all([
-      alertDave({ brief, live: wantsLive, spokenTime, eventLink: event.link }),
+      alertDave({
+        brief,
+        kind: wantsLive ? "live" : "booked",
+        spokenTime,
+        eventLink: event.link,
+      }),
       confirmToVisitor({ brief, live: wantsLive, spokenTime }),
     ]);
     if (!daveTold) {
