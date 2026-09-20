@@ -8,11 +8,21 @@ import type { PickerKey } from "@/lib/verdict";
  * so there is exactly one copy of the verdict text on the site.
  */
 
-/** Hard stop on a single conversation. Also enforced server-side via ttlSeconds. */
-export const CASEY_MAX_SESSION_SECONDS = 180;
+/**
+ * Hard stop on a single conversation, also enforced server-side via ttlSeconds.
+ *
+ * This is sized for a real conversation, not for rationing. A proper
+ * qualification plus the close runs four to five minutes; three minutes cut her
+ * off mid-recommendation, which wastes the whole conversation. At $0.09/min the
+ * difference is pennies — the cap is here for abandoned tabs and bots.
+ */
+export const CASEY_MAX_SESSION_SECONDS = 360;
 
-/** Start winding her up before the hard stop so she can close properly. */
-export const CASEY_WRAP_UP_SECONDS = 165;
+/**
+ * When to tell her time is short. A full minute of runway, so she can finish
+ * the thought she is on and still close properly.
+ */
+export const CASEY_WRAP_UP_SECONDS = 300;
 
 /**
  * Casey is told to say one of these labels verbatim when she confirms which
