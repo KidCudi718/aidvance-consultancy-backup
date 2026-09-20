@@ -15,7 +15,9 @@ const BAR_COUNT = 44;
  * - `speaking` is driven off her real output audio when we can reach the
  *   element the transport attaches to the page; if we cannot, it falls back to
  *   a speech-shaped envelope rather than pretending to be silent.
- * - `idle` is a flat line. Nothing is listening and it should look like it.
+ * - `idle` breathes: a slow travelling swell, well below speaking amplitude.
+ *   It says "ready" without claiming to hear anything, which a flat line did
+ *   not - that read as broken rather than waiting.
  * - `thinking` is slow and shallow — without it a pause reads as a crash.
  */
 export function Waveform({
@@ -126,7 +128,7 @@ export function Waveform({
 
     if (reduced) {
       for (let i = 0; i < BAR_COUNT; i += 1) {
-        setBar(i, stateRef.current === "idle" ? 0.05 : 0.5);
+        setBar(i, stateRef.current === "idle" ? 0.16 : 0.5);
       }
       return;
     }
@@ -141,8 +143,12 @@ export function Waveform({
       const current = stateRef.current;
 
       if (current === "idle") {
+        // Slow enough that nobody mistakes it for a live microphone, visible
+        // enough that the panel looks awake.
         for (let i = 0; i < BAR_COUNT; i += 1) {
-          setBar(i, 0.05);
+          const swell = Math.sin(elapsed * 1.15 - i * 0.28);
+          const drift = Math.sin(elapsed * 0.45 + i * 0.07);
+          setBar(i, 0.16 + swell * 0.1 + drift * 0.05);
         }
       } else if (current === "thinking") {
         for (let i = 0; i < BAR_COUNT; i += 1) {
