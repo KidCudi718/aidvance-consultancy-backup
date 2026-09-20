@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 196" role="img" aria-labelledby="wmTitle wmDesc">
+  <title id="wmTitle">Aidvance Consultancy</title>
+  <desc id="wmDesc">Geometric black wordmark with chevron A and V. Faithful to the Aidvance mark.</desc>
+  <g fill="#111110" fill-rule="evenodd">
+    <path d="M0 100 L42 0 H54 L96 100 H80.6 L48 14.2 L15.4 100 Z"/>
+    <path d="M114 0 H130 V100 H114 Z"/>
+    <path d="M148 0 H192 C228.5 0 252 22 252 50 C252 78 228.5 100 192 100 H148 V0 Z M164 14.5 V85.5 H190 C214.5 85.5 234 71.5 234 50 C234 28.5 214.5 14.5 190 14.5 H164 Z"/>
+    <path d="M270 0 H285.4 L318 85.8 L350.6 0 H366 L318 100 Z"/>
+    <path d="M384 100 L426 0 H438 L480 100 H464.6 L432 14.2 L399.4 100 Z"/>
+    <path d="M498 0 H514 V79 L576 0 H596 V100 H580 V21 L518 100 H498 Z"/>
+    <path d="M614 0 H684 V14.8 H640 C616 14.8 602 30.5 602 50 C602 69.5 616 85.2 640 85.2 H684 V100 H614 C581 100 564 78 564 50 C564 22 581 0 614 0 Z"/>
+    <path d="M702 0 H760 V14.8 H718 V42.6 H752 V57.4 H718 V85.2 H760 V100 H702 Z"/>
+  </g>
+  <g fill="#111110">
+    <text x="0" y="164" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" letter-spacing="19.15">CONSULTANCY</text>
+  </g>
+</svg>
