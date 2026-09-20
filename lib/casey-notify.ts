@@ -50,6 +50,8 @@ export type Briefing = {
   phone?: string;
   email?: string;
   notes?: string;
+  /** The whole conversation, verbatim. Set by the post-call sweep. */
+  transcript?: string;
 };
 
 /** Anything that reaches the HTML came from a stranger's mouth. Escape it. */
@@ -100,6 +102,9 @@ export function briefingText(brief: Briefing): string {
   }
   if (brief.notes?.trim()) {
     sections.push(`In their own words: ${brief.notes.trim()}`);
+  }
+  if (brief.transcript?.trim()) {
+    sections.push(`The whole conversation:\n\n${brief.transcript.trim()}`);
   }
 
   return sections.join("\n\n");
@@ -288,6 +293,35 @@ export function daveInbox(): string {
 }
 
 /**
+ * The whole conversation, laid out so Dave can skim who said what.
+ *
+ * Casey's lines are set in the muted grey the rest of the email uses for
+ * labels; the visitor's are in ink, because those are the words worth reading.
+ */
+function transcriptHtml(transcript: string): string {
+  const lines = transcript
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const isCasey = line.startsWith("Casey:");
+      const body = line.replace(/^(Casey|Them):\s*/, "");
+      const speaker = isCasey ? "Casey" : "Them";
+      return `<tr><td style="padding:0 12px 6px 0;vertical-align:top;white-space:nowrap;font-size:12px;color:${MUTED};">${speaker}</td><td style="padding:0 0 6px 0;vertical-align:top;font-size:14px;line-height:20px;color:${
+        isCasey ? MUTED : INK
+      };">${esc(body)}</td></tr>`;
+    })
+    .join("\n");
+
+  return [
+    `<div style="margin:28px 0 0 0;padding-top:20px;border-top:1px solid ${RULE};">`,
+    `<div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:${MUTED};margin:0 0 12px 0;">The whole conversation</div>`,
+    `<table cellpadding="0" cellspacing="0" border="0" style="width:100%;">${lines}</table>`,
+    `</div>`,
+  ].join("\n");
+}
+
+/**
  * Tell Dave.
  *
  * The subject has to carry the whole verdict on its own, because that is all
@@ -373,6 +407,7 @@ export async function alertDave(args: {
             args.eventLink,
           )}" style="display:inline-block;padding:11px 20px;background-color:${INK};color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;">Open on your calendar</a></p>`
         : "",
+      args.brief.transcript?.trim() ? transcriptHtml(args.brief.transcript) : "",
     ]
       .filter(Boolean)
       .join("\n"),
