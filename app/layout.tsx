@@ -30,7 +30,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — AI Opportunity Assessment`,
+    default: `${site.name} — Know which AI tools to skip`,
     template: `%s — ${site.name}`,
   },
   description: site.description,
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     locale: site.locale,
     url: site.url,
     siteName: site.name,
-    title: `${site.name} — AI Opportunity Assessment`,
+    title: `${site.name} — Know which AI tools to skip`,
     description: site.description,
     images: [
       {
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — AI Opportunity Assessment`,
+    title: `${site.name} — Know which AI tools to skip`,
     description: site.description,
   },
   robots: {

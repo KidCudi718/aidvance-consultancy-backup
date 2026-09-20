@@ -19,8 +19,8 @@ export const articles: Article[] = [
   {
     slug: "assessment-versus-hype",
     title: "An assessment is not a sales pitch with extra slides",
-    shortTitle: "Assessment versus hype",
-    dek: "How a useful AI evaluation differs from a vendor readiness workshop that ends in a quote.",
+    shortTitle: "Is this just a sales pitch?",
+    dek: "How to tell a useful look at your work from a workshop that ends in a quote.",
     published: "2026-03-12",
     updated: "2026-03-12",
     minutes: 9,
@@ -62,7 +62,7 @@ export const articles: Article[] = [
         heading: "Red flags that are easy to miss",
         paragraphs: [
           "Complimentary assessments are not automatically dishonest. They are structurally biased. The person giving away the diagnosis is usually recovering the cost in a platform license, a retainer, or a build.",
-          "Watch for language that cannot be falsified: transformation, unlock, intelligence layer, future-ready. Watch for a demo that uses someone else’s data. Watch for a recommendation that requires you to migrate files before anyone has counted how many files you have.",
+          "Watch for language that cannot be checked: future-ready, intelligence layer, and other words that do not name a Tuesday job. Watch for a demo that uses someone else’s data. Watch for a recommendation that requires you to migrate files before anyone has counted how many files you have.",
           "Also watch for speed that feels like a favor. A two-day “strategy sprint” that never shadows a real workflow is a performance.",
         ],
       },
@@ -78,8 +78,8 @@ export const articles: Article[] = [
   {
     slug: "where-smbs-waste-money-on-ai",
     title: "Where small businesses actually waste money on AI",
-    shortTitle: "Where SMBs waste money",
-    dek: "The spend is usually seats, retainers, and tools bought before anyone named the job.",
+    shortTitle: "Stop paying for tools you don’t use",
+    dek: "The leak is usually unused seats, a chatbot nobody asked for, and tools bought before anyone named the job.",
     published: "2026-03-18",
     updated: "2026-03-18",
     minutes: 10,
@@ -129,7 +129,7 @@ export const articles: Article[] = [
         heading: "A cheaper order of operations",
         paragraphs: [
           "Count the work before you count the models. Write down three recurring jobs that eat hours. For each one, note volume, exceptions, and what “done” looks like. Only then look at tools.",
-          "If you want that written down with a second pair of eyes, that is the assessment. If you want a stack first, you can buy a stack without us. Plenty of people will sell you one.",
+          "If you want that written down with a second pair of eyes, that is the assessment. If you want more software first, you can buy it without us. Plenty of people will sell you some.",
         ],
       },
     ],
@@ -137,7 +137,7 @@ export const articles: Article[] = [
   {
     slug: "workflow-audit-before-tools",
     title: "Do a workflow audit before you buy another tool",
-    shortTitle: "Audit the work first",
+    shortTitle: "Map the work before you buy",
     dek: "Shadow the work for a week. The exceptions are the job. The software is optional.",
     published: "2026-03-24",
     updated: "2026-03-24",
@@ -195,8 +195,8 @@ export const articles: Article[] = [
   {
     slug: "how-to-brief-a-consultant",
     title: "How to brief a consultant so the work stays small",
-    shortTitle: "How to brief a consultant",
-    dek: "Send the facts before the call. Name done. Name off-limits. Keep the ocean from being boiled.",
+    shortTitle: "Keep the consultant job small",
+    dek: "Send the facts before the call. Name done. Name off-limits. Keep the job from growing.",
     published: "2026-04-02",
     updated: "2026-04-02",
     minutes: 8,
@@ -249,8 +249,8 @@ export const articles: Article[] = [
   {
     slug: "when-not-to-automate",
     title: "When you should not automate",
-    shortTitle: "When not to automate",
-    dek: "Some work gets worse when you speed it up. Here is how to leave it alone on purpose.",
+    shortTitle: "When not to speed the work up",
+    dek: "Some work gets worse when you make it faster. Here is how to leave it alone on purpose.",
     published: "2026-04-09",
     updated: "2026-04-09",
     minutes: 9,

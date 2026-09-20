@@ -8,6 +8,12 @@ export function OrganizationJsonLd() {
     url: site.url,
     email: site.email,
     description: site.description,
+    founder: {
+      "@type": "Person",
+      name: site.person.name,
+      jobTitle: site.person.role,
+      email: site.email,
+    },
     areaServed: "Worldwide",
     image: `${site.url}/brand/logo.png`,
     logo: `${site.url}/brand/logo.png`,

@@ -10,20 +10,24 @@ export function SiteFooter() {
         <div>
           <Logo size="footer" />
           <p className="muted footer-blurb">
-            Independent AI consultancy. A written decision before anyone sells you a stack.
+            For owners who need to know which AI tools to skip — and how to get
+            hours back each week.
+          </p>
+          <p className="muted">
+            {site.person.name}, {site.person.role}
           </p>
         </div>
         <div>
           <p className="kicker">Practice</p>
           <ul>
             <li>
-              <Link href="/#offer">AI Opportunity Assessment</Link>
+              <Link href="/assessment">{site.offer.name}</Link>
             </li>
             <li>
-              <Link href="/assessment">What you receive</Link>
+              <Link href="/#method">How it works</Link>
             </li>
             <li>
-              <Link href="/contact">Contact</Link>
+              <Link href="/contact">Talk to us</Link>
             </li>
             <li>
               <a href={`mailto:${site.email}`}>{site.email}</a>

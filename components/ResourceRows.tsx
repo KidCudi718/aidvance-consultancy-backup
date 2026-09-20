@@ -15,7 +15,7 @@ export function ResourceRows({ limit }: { limit?: number }) {
           <span className="res-card__n">
             {String(index + 1).padStart(2, "0")} · {article.minutes} min
           </span>
-          <h3>{article.title}</h3>
+          <h3>{article.shortTitle}</h3>
           <p>{article.dek}</p>
         </Link>
       ))}

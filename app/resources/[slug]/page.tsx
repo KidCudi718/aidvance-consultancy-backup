@@ -73,7 +73,7 @@ export default async function ArticlePage({ params }: PageProps) {
             <ArticleBody article={article} />
             <div className="article-cta">
               <p className="kicker">Next</p>
-              <h2 className="display display--sm">If this named your problem, write.</h2>
+              <h2 className="display display--sm">If this named your worry, write.</h2>
               <div className="actions">
                 <a className="btn btn--solid" href={assessmentMailto()}>
                   Request an assessment

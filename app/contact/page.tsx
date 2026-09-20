@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { assessmentMailto, contactMailto, site } from "@/lib/site";
+import { assessmentMailto, site, talkMailto } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Write to ${site.name} at ${site.email}. Assessment requests and ordinary enquiries.`,
+  description: `Write to ${site.person.name} at ${site.email}. A short note is enough.`,
   alternates: { canonical: "/contact" },
 };
 
@@ -13,14 +13,16 @@ export default function ContactPage() {
     <section className="contact-split" aria-label="Contact">
       <div className="contact-split__ink">
         <div>
-          <p className="kicker">Desk</p>
-          <h1 className="display display--md">Write before we talk.</h1>
+          <p className="kicker">Talk to us</p>
+          <h1 className="display display--md">A short note is enough.</h1>
           <p className="lede">
-            Mail is the intake. A form would pretend we have a queue we do not.
-            Write in plain language. We will answer.
+            No form. No queue theatre. Write in plain language. {site.person.name}{" "}
+            will answer.
           </p>
         </div>
         <div>
+          <p className="person__role person__role--on-ink">{site.person.role}</p>
+          <p className="person__name">{site.person.name}</p>
           <a className="email" href={`mailto:${site.email}`}>
             {site.email}
           </a>
@@ -28,24 +30,24 @@ export default function ContactPage() {
             <a className="btn btn--invert" href={assessmentMailto()}>
               Request an assessment
             </a>
-            <a className="btn btn--invert" href={contactMailto()}>
-              General enquiry
+            <a className="btn btn--invert" href={talkMailto()}>
+              Talk to us
             </a>
           </div>
         </div>
       </div>
       <div className="contact-split__copy">
-        <p className="kicker">Useful to include</p>
-        <h2 className="display display--sm">Name the lane. Leave the pitch.</h2>
+        <p className="kicker">If it helps</p>
+        <h2 className="display display--sm">You do not need a perfect brief.</h2>
         <div className="prose prose--flush">
           <ul>
-            <li>What the business sells, and roughly at what volume.</li>
-            <li>The one lane of work that feels expensive or slow.</li>
+            <li>What the business sells.</li>
+            <li>The work that feels slow or expensive.</li>
             <li>Tools you already pay for.</li>
             <li>What we should not look at.</li>
           </ul>
           <p>
-            If you want help writing that, use{" "}
+            Missing pieces are fine. If you want a template, use{" "}
             <Link href="/resources/how-to-brief-a-consultant">
               the briefing note
             </Link>

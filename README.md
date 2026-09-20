@@ -25,15 +25,15 @@ npm run lint
 
 A production-ready Next.js (App Router, TypeScript) site:
 
-- Editorial consultancy pages (home, assessment, contact)
-- Resource index plus five plain-English notes for SMB operators
+- Owner-facing pages (home, assessment, contact) in black and white
+- Resource index plus five short notes that help before anyone hires
 - **AI Opportunity Assessment** as the front door (no prices on the site)
 - Contact via `mailto:david.choukroun2@gmail.com`
 - Official wordmark in the header, footer, favicon, and Open Graph image (see `public/brand/`)
 
 Preview hosting (Vercel or similar) is enough. Point `aidvance.xyz` at a host only when you decide to.
 
-## Stack
+## Built with
 
 - Next.js App Router and TypeScript
 - Custom CSS (no default Tailwind SaaS theme)

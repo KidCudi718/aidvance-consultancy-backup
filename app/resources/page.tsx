@@ -4,7 +4,7 @@ import { ResourceRows } from "@/components/ResourceRows";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Plain-English notes on AI assessments, wasted spend, workflow audits, briefing a consultant, and when not to automate.",
+    "Short notes that help before you hire anyone: which tools to skip, how to map the work, and when not to speed it up.",
   alternates: { canonical: "/resources" },
 };
 
@@ -13,11 +13,11 @@ export default function ResourcesPage() {
     <>
       <section className="article-hero">
         <div className="shell">
-          <p className="kicker">Library</p>
-          <h1>Resources</h1>
+          <p className="kicker">Help before the ask</p>
+          <h1>Read these before you hire anyone.</h1>
           <p className="lede">
-            These notes are the public version of how we work. No newsletter gate.
-            If a page cannot be used on a Tuesday, it does not belong here.
+            Why this helps: each note answers a worry owners have before they
+            spend another Tuesday on a vendor call. No newsletter gate.
           </p>
         </div>
       </section>
