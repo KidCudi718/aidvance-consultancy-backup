@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { OrganizationJsonLd } from "@/components/JsonLd";
@@ -102,6 +103,8 @@ export default function RootLayout({
         <SiteHeader />
         <main id="content">{children}</main>
         <SiteFooter />
+        {/* Counts visits without a cookie, so nothing here needs a consent banner. */}
+        <Analytics />
       </body>
     </html>
   );
