@@ -1,59 +1,65 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { assessmentMailto, site, talkMailto } from "@/lib/site";
+import { ContactForm } from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Write to ${site.person.name} at ${site.email}. A short note is enough.`,
-  alternates: { canonical: "/contact" },
+  description:
+    "You're writing to one person, not a support queue. Whoever reads it is the same person who'd do the work.",
+  alternates: { canonical: "/contact/" },
 };
 
-export default function ContactPage() {
+type PageProps = {
+  searchParams: Promise<{
+    message?: string | string[];
+    topic?: string | string[];
+    sent?: string | string[];
+  }>;
+};
+
+function first(value: string | string[] | undefined): string {
+  if (Array.isArray(value)) {
+    return value[0] ?? "";
+  }
+  return value ?? "";
+}
+
+export default async function ContactPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const defaultMessage = first(params.message);
+  const topic = first(params.topic);
+  const alreadySent = first(params.sent) === "1";
+
   return (
     <section className="contact-split" aria-label="Contact">
       <div className="contact-split__ink">
         <div>
-          <p className="kicker">Talk to us</p>
-          <h1 className="display display--md">A short note is enough.</h1>
+          <p className="kicker">Contact</p>
+          <h1 className="display display--md">Write like a person. So will we.</h1>
           <p className="lede">
-            No form. No queue theatre. Write in plain language. {site.person.name}{" "}
-            will answer.
+            You&apos;re writing to one person, not a support queue. Whoever
+            reads it is the same person who&apos;d do the work.
           </p>
         </div>
-        <div>
-          <p className="person__role person__role--on-ink">{site.person.role}</p>
-          <p className="person__name">{site.person.name}</p>
-          <a className="email" href={`mailto:${site.email}`}>
-            {site.email}
-          </a>
-          <div className="actions">
-            <a className="btn btn--invert" href={assessmentMailto()}>
-              Request an assessment
-            </a>
-            <a className="btn btn--invert" href={talkMailto()}>
-              Talk to us
-            </a>
-          </div>
-        </div>
+        <p className="lede">A name, an email, and a short note is enough.</p>
       </div>
       <div className="contact-split__copy">
-        <p className="kicker">If it helps</p>
+        <p className="kicker">Get in touch</p>
         <h2 className="display display--sm">You do not need a perfect brief.</h2>
-        <div className="prose prose--flush">
-          <ul>
-            <li>What the business sells.</li>
-            <li>The work that feels slow or expensive.</li>
-            <li>Tools you already pay for.</li>
-            <li>What we should not look at.</li>
-          </ul>
-          <p>
-            Missing pieces are fine. If you want a template, use{" "}
-            <Link href="/resources/how-to-brief-a-consultant">
-              the briefing note
-            </Link>
-            .
-          </p>
-        </div>
+        <p className="lede lede--form">
+          What the business sells, the work that eats the week, and whether you
+          want a look or just a straight answer. Missing pieces are fine.
+        </p>
+        <ContactForm
+          key={`${topic}:${defaultMessage}:${alreadySent ? "sent" : "form"}`}
+          defaultMessage={defaultMessage}
+          topic={topic}
+          alreadySent={alreadySent}
+        />
+        <p className="muted form-follow">
+          If you would rather read first, start with{" "}
+          <Link href="/library/">the library</Link>.
+        </p>
       </div>
     </section>
   );
