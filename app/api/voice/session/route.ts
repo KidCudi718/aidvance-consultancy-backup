@@ -10,16 +10,26 @@ export const dynamic = "force-dynamic";
  * The real risk with a public voice agent is not the per-minute rate, it is an
  * open tab or a bot looping it. Three limits, all enforced here:
  *   - ttlSeconds, so a session cannot outlive its welcome server-side
- *   - one session per caller per hour
+ *   - a short cooldown per caller, so one visitor cannot loop it
  *   - a hard ceiling on sessions per day
  * When a limit trips the caller gets a clean 429 and the page quietly falls
- * back to the six-row list. Nobody sees an error.
+ * back to the grid of problems. Nobody sees an error.
  */
 
 // Sits just past the 360s client-side stop, so the client always ends the
 // conversation deliberately rather than having the token die underneath it.
 const SESSION_TTL_SECONDS = 420;
-const PER_CALLER_COOLDOWN_MS = 60 * 60 * 1000;
+
+/**
+ * How long one visitor waits before they can start again.
+ *
+ * This exists to stop abandoned tabs and bots looping the agent, not to ration
+ * real people. An hour punished the wrong person: someone whose call dropped,
+ * or whose phone rang mid-conversation, could not come back for the rest of
+ * the hour. Twenty minutes still costs a bot almost everything and costs a
+ * genuine visitor almost nothing.
+ */
+const PER_CALLER_COOLDOWN_MS = 20 * 60 * 1000;
 const DAILY_SESSION_CEILING = Number(process.env.CASEY_DAILY_LIMIT ?? 120);
 
 type Bucket = { day: string; count: number };
@@ -91,7 +101,7 @@ async function mint(
 }
 
 /**
- * Speko marks some refusals retryable — notably when its provider-direct
+ * Speko marks some refusals retryable, notably when its provider-direct
  * speech-to-speech bootstrap is unavailable. Cascade assembles the same call
  * out of separate speech, model and voice providers and keeps working, so a
  * retryable refusal is worth one more attempt rather than an apology.
@@ -111,7 +121,7 @@ export async function POST(request: Request): Promise<Response> {
   const agentId = process.env.SPEKO_AGENT_ID;
 
   if (!apiKey || !agentId) {
-    // Not configured yet — the page falls back to the list.
+    // Not configured yet, the page falls back to the grid.
     return new Response("voice not configured", { status: 503 });
   }
 
