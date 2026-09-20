@@ -10,7 +10,7 @@ const walkAway = [
   },
   {
     title: "The findings, sorted",
-    body: "Everything we heard, prioritised, with the reasoning shown.",
+    body: "Everything we heard, prioritized, with the reasoning shown.",
   },
   {
     title: "A ranked roadmap",
@@ -136,7 +136,7 @@ export default function HomePage() {
         <div className="shell">
           <p className="kicker">What you walk away with</p>
           <h2 className="display display--md">
-            Four documents, all of them plain English.
+            Six documents, all of them plain English.
           </h2>
         </div>
         <div className="memo memo--static" aria-label="What you walk away with">

@@ -6,11 +6,22 @@ import { submitContact } from "@/app/contact/actions";
 export function ContactForm({
   defaultMessage = "",
   topic = "",
+  alreadySent = false,
 }: {
   defaultMessage?: string;
   topic?: string;
+  alreadySent?: boolean;
 }) {
   const [state, action, pending] = useActionState(submitContact, null);
+  const succeeded = alreadySent || Boolean(state?.success);
+
+  if (succeeded) {
+    return (
+      <p className="contact-form__success" role="status">
+        Got it — I&apos;ll reply by email.
+      </p>
+    );
+  }
 
   return (
     <form id="form" className="contact-form" action={action}>
@@ -35,7 +46,7 @@ export function ContactForm({
       </label>
       {state?.error ? <p className="contact-form__error">{state.error}</p> : null}
       <button className="btn btn--solid" type="submit" disabled={pending}>
-        {pending ? "Opening…" : "Send the note"}
+        {pending ? "Sending…" : "Send the note"}
       </button>
     </form>
   );

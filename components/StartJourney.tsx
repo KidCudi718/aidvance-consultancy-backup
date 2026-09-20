@@ -18,7 +18,6 @@ type Picked = Partial<Record<PickerKey, boolean>>;
 export function StartJourney() {
   const [picked, setPicked] = useState<Picked>({});
   const [otherText, setOtherText] = useState("");
-  const [otherDraft, setOtherDraft] = useState("");
   const firstTick = useRef(true);
   const verdictRef = useRef<HTMLElement>(null);
   const otherFieldRef = useRef<HTMLInputElement>(null);
@@ -117,13 +116,12 @@ export function StartJourney() {
                 ref={otherFieldRef}
                 className="otherbox__field"
                 type="text"
-                value={otherDraft}
+                value={otherText}
                 placeholder="In your own words — what takes the most time?"
-                onChange={(event) => setOtherDraft(event.target.value)}
+                onChange={(event) => setOtherText(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     event.preventDefault();
-                    setOtherText(otherDraft);
                   }
                 }}
               />
@@ -131,7 +129,9 @@ export function StartJourney() {
                 id="othergo"
                 className="btn btn--solid"
                 type="button"
-                onClick={() => setOtherText(otherDraft)}
+                onClick={() => {
+                  otherFieldRef.current?.blur();
+                }}
               >
                 Tell me about it
               </button>

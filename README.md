@@ -32,6 +32,19 @@ A production-ready Next.js (App Router, TypeScript) site:
 - Black and white ledger shell
 - Contact via the form on `/contact/` — no inbox address is published on the site
 
+## Contact form delivery
+
+The `/contact/` form posts to a **server action**. The inbox string never appears in the browser, page copy, JSON-LD, footer, or redirects.
+
+1. If `RESEND_API_KEY` is set, the action sends mail through Resend to `CONTACT_INBOX`.
+2. If Resend is unset, the action POSTs JSON `{ name, email, message, _subject }` to FormSubmit.co ajax (`https://formsubmit.co/ajax/${CONTACT_INBOX}`) as a zero-config fallback.
+
+`CONTACT_INBOX` is server-only. If unset, the action uses a hardcoded server-only fallback inbox.
+
+**FormSubmit activation:** the first fallback submission sends a one-time activation email to that inbox. Dave must click it once, or later notes will not arrive.
+
+Optional: `CONTACT_FROM` sets the Resend From address (defaults to Resend’s onboarding sender for tests).
+
 Preview hosting (Vercel or similar) is enough. Point `aidvance.xyz` at a host only when you decide to.
 
 ## Built with

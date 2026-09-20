@@ -13,6 +13,7 @@ type PageProps = {
   searchParams: Promise<{
     message?: string | string[];
     topic?: string | string[];
+    sent?: string | string[];
   }>;
 };
 
@@ -27,6 +28,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const defaultMessage = first(params.message);
   const topic = first(params.topic);
+  const alreadySent = first(params.sent) === "1";
 
   return (
     <section className="contact-split" aria-label="Contact">
@@ -49,9 +51,10 @@ export default async function ContactPage({ searchParams }: PageProps) {
           want a look or just a straight answer. Missing pieces are fine.
         </p>
         <ContactForm
-          key={`${topic}:${defaultMessage}`}
+          key={`${topic}:${defaultMessage}:${alreadySent ? "sent" : "form"}`}
           defaultMessage={defaultMessage}
           topic={topic}
+          alreadySent={alreadySent}
         />
         <p className="muted form-follow">
           If you would rather read first, start with{" "}
