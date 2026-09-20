@@ -7,15 +7,6 @@
   padding: 1.35rem 0 0;
 }
 
-/* When she has the floor the whole panel inverts. That is the entire
-   turn-taking signal — no label, no avatar, no colour. */
-.casey[data-speaking="true"] {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 1.35rem var(--gutter) 1.5rem;
-  margin-inline: calc(var(--gutter) * -1);
-}
-
 .wave {
   display: flex;
   align-items: center;
@@ -24,10 +15,6 @@
   padding-block: 1.1rem;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
-}
-
-.casey[data-speaking="true"] .wave {
-  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .wave > span {
@@ -42,8 +29,11 @@
   will-change: transform;
 }
 
-.casey[data-speaking="true"] .wave > span {
-  background: var(--bg);
+/* Whose turn it is, without flashing anything: her voice is solid black,
+   the visitor's is mid-grey. The eye reads the weight change instantly and
+   nothing about the page jumps. */
+.wave[data-state="listening"] > span {
+  background: #8a8a8a;
 }
 
 .status {
@@ -57,11 +47,6 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-}
-
-.casey[data-speaking="true"] .status {
-  color: var(--bg);
-  opacity: 0.78;
 }
 
 .controls {
@@ -81,10 +66,6 @@
 }
 
 .talkBtn:hover .dot {
-  background: var(--ink);
-}
-
-.casey[data-speaking="true"] .talkBtn .dot {
   background: var(--ink);
 }
 
@@ -109,31 +90,25 @@
   color: var(--ink);
 }
 
-.casey[data-speaking="true"] .talkBtn {
-  border-color: var(--bg);
-  background: var(--bg);
-  color: var(--ink);
-}
-
-.casey[data-speaking="true"] .talkBtn:hover {
-  background: transparent;
-  color: var(--bg);
-}
-
 .stopBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 3.25rem;
   padding: 0.9rem 1.2rem;
-  border: 1px solid currentColor;
+  border: 1px solid var(--ink);
   background: transparent;
-  color: inherit;
+  color: var(--ink);
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.stopBtn:hover {
+  background: var(--ink);
+  color: var(--bg);
 }
 
 .turns {
@@ -154,7 +129,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  opacity: 0.6;
+  color: var(--muted);
 }
 
 .said {
@@ -166,7 +141,7 @@
 }
 
 .saidPrev {
-  opacity: 0.55;
+  color: var(--muted);
   font-size: 1.05rem;
 }
 
@@ -174,11 +149,6 @@
   margin: 0;
   color: var(--muted);
   font-size: 0.98rem;
-}
-
-.casey[data-speaking="true"] .note {
-  color: var(--bg);
-  opacity: 0.85;
 }
 
 /* How the button behaves, said out loud. */
