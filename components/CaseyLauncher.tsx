@@ -64,7 +64,9 @@ export function CaseyLauncher({
     };
   }, [teardown]);
 
-  // Session clock: wind her up, then hard stop.
+  // Session clock. She gets a full minute of warning so she can finish the
+  // thought she is on and still close properly — being cut off mid-
+  // recommendation wastes the entire conversation.
   useEffect(() => {
     if (!live) {
       return;
@@ -74,7 +76,7 @@ export function CaseyLauncher({
         const next = value + 1;
         if (next === CASEY_WRAP_UP_SECONDS) {
           conversationRef.current?.sendContextualUpdate?.(
-            "You have about fifteen seconds left. Close now: hand over the guide and ask for the meeting or the email.",
+            "About a minute left. Finish the thought you're on, then close: give them the honest read, hand over the guide, and ask for the fifteen minutes or the email.",
           );
         }
         if (next >= CASEY_MAX_SESSION_SECONDS) {
@@ -224,9 +226,9 @@ export function CaseyLauncher({
       ) : (
         <>
           <p className={styles.note}>
-            Two minutes with Casey and she&apos;ll tell you straight which bit of
-            your week is worth fixing first — including when the answer isn&apos;t
-            AI at all.
+            A few minutes with Casey and she&apos;ll tell you straight which bit
+            of your week is worth fixing first — including when the answer
+            isn&apos;t AI at all.
           </p>
           <div className={styles.controls}>
             <button

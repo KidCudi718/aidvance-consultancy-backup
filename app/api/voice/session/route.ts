@@ -16,7 +16,9 @@ export const dynamic = "force-dynamic";
  * back to the six-row list. Nobody sees an error.
  */
 
-const SESSION_TTL_SECONDS = 210; // a little past the 180s client-side stop
+// Sits just past the 360s client-side stop, so the client always ends the
+// conversation deliberately rather than having the token die underneath it.
+const SESSION_TTL_SECONDS = 420;
 const PER_CALLER_COOLDOWN_MS = 60 * 60 * 1000;
 const DAILY_SESSION_CEILING = Number(process.env.CASEY_DAILY_LIMIT ?? 120);
 
