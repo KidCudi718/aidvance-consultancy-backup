@@ -3,9 +3,9 @@ import Link from "next/link";
 import { assessmentMailto, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: `${site.offer.name} (${site.offer.feeLabel})`,
+  title: site.offer.name,
   description:
-    "Fixed-fee AI Opportunity Assessment: one working session and a written brief. Implementation scoped separately, with no obligation.",
+    "AI Opportunity Assessment: one working session and a written brief. Implementation scoped separately, with no obligation.",
   alternates: { canonical: "/assessment" },
 };
 
@@ -14,18 +14,15 @@ export default function AssessmentPage() {
     <>
       <section className="article-hero">
         <div className="shell">
-          <p className="kicker">
-            <span className="kicker__num">Offer</span>
-            <span>Fixed fee · {site.offer.feeLabel}</span>
-          </p>
+          <p className="kicker">Offer</p>
           <h1>{site.offer.name}</h1>
           <p className="lede">
             {site.offer.duration}. A decision you can keep even if you never hire
             us again.
           </p>
           <div className="actions">
-            <a className="btn btn--accent" href={assessmentMailto()}>
-              Request the assessment
+            <a className="btn btn--solid" href={assessmentMailto()}>
+              Request an assessment
             </a>
             <Link className="btn" href="/resources/assessment-versus-hype">
               Assessment versus hype
@@ -34,43 +31,40 @@ export default function AssessmentPage() {
         </div>
       </section>
 
-      <section className="section section--rule section--tight">
-        <div className="shell grid-12">
-          <div className="col-5">
-            <h2 className="display" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)" }}>
-              What the {site.offer.feeLabel} pays for
-            </h2>
-          </div>
-          <div className="col-7 prose">
-            <p>
-              The fee covers preparation from your brief, a working session of
-              about ninety minutes, and a written assessment delivered as a
-              short document — not a 40-slide performance.
-            </p>
-            <ul>
-              <li>Review of the lane of work you name, including exceptions.</li>
-              <li>Inventory of tools you already pay for, used or not.</li>
-              <li>Ranked opportunities with a reason each one is in or out.</li>
-              <li>A do-not-automate list.</li>
-              <li>One 90-day next step sized for a busy owner.</li>
-            </ul>
-            <p>
-              It does not cover implementation, software licenses, or ongoing
-              access to us. Those, if they happen, are scoped after you have the
-              brief in hand.
-            </p>
-          </div>
+      <section className="offer-panel">
+        <div className="offer-panel__left">
+          <p className="kicker">Scope</p>
+          <h2>What the assessment covers</h2>
+        </div>
+        <div className="offer-panel__right prose prose--flush">
+          <p>
+            Preparation from your brief, a working session of about ninety
+            minutes, and a written assessment delivered as a short document —
+            not a 40-slide performance.
+          </p>
+          <ul>
+            <li>Review of the lane of work you name, including exceptions.</li>
+            <li>Inventory of tools you already pay for, used or not.</li>
+            <li>Ranked opportunities with a reason each one is in or out.</li>
+            <li>A do-not-automate list.</li>
+            <li>One 90-day next step sized for a busy owner.</li>
+          </ul>
+          <p>
+            It does not cover implementation, software licenses, or ongoing
+            access to us. Those, if they happen, are scoped after you have the
+            brief in hand.
+          </p>
         </div>
       </section>
 
-      <section className="section section--rule section--tight">
+      <section className="section">
         <div className="shell grid-12">
           <div className="col-5">
-            <h2 className="display" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)" }}>
+            <h2 className="display display--sm">
               How to start
             </h2>
           </div>
-          <div className="col-7 prose">
+          <div className="col-7 prose prose--flush">
             <p>
               Send the email. Include what you sell, who does the work, and the
               lane you want inspected. If you have a recent mess — a late
@@ -89,7 +83,7 @@ export default function AssessmentPage() {
               . Come back when the lane has a name.
             </p>
             <div className="actions">
-              <a className="btn btn--accent" href={assessmentMailto()}>
+              <a className="btn btn--solid" href={assessmentMailto()}>
                 Email {site.email}
               </a>
             </div>

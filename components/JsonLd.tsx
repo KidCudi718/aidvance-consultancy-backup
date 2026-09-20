@@ -9,14 +9,15 @@ export function OrganizationJsonLd() {
     email: site.email,
     description: site.description,
     areaServed: "Worldwide",
-    image: `${site.url}/brand/wordmark.svg`,
-    logo: `${site.url}/brand/wordmark.svg`,
-    offers: {
+    image: `${site.url}/brand/logo.png`,
+    logo: `${site.url}/brand/logo.png`,
+    makesOffer: {
       "@type": "Offer",
-      name: site.offer.name,
-      price: site.offer.feeUsd,
-      priceCurrency: "USD",
-      description: site.offer.duration,
+      itemOffered: {
+        "@type": "Service",
+        name: site.offer.name,
+        description: site.offer.duration,
+      },
     },
   };
 
@@ -56,6 +57,7 @@ export function ArticleJsonLd({
       "@type": "Organization",
       name: site.name,
       url: site.url,
+      logo: `${site.url}/brand/logo.png`,
     },
     mainEntityOfPage: `${site.url}${path}`,
   };

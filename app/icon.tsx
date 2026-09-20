@@ -1,27 +1,27 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-export default function Icon() {
+export default async function Icon() {
+  const mark = await readFile(join(process.cwd(), "public/brand/mark.png"));
+  const src = `data:image/png;base64,${mark.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
         style={{
           width: "100%",
           height: "100%",
-          background: "#f3f0e8",
+          background: "#ffffff",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <svg width="20" height="21" viewBox="0 0 96 100">
-          <path
-            fill="#111110"
-            d="M0 100 L42 0 H54 L96 100 H80.6 L48 14.2 L15.4 100 Z"
-          />
-        </svg>
+        <img src={src} width={26} height={26} alt="" />
       </div>
     ),
     { ...size },

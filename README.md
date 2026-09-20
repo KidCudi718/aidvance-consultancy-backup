@@ -27,9 +27,9 @@ A production-ready Next.js (App Router, TypeScript) site:
 
 - Editorial consultancy pages (home, assessment, contact)
 - Resource index plus five plain-English notes for SMB operators
-- Fixed-fee **AI Opportunity Assessment ($999)** as the front door
+- **AI Opportunity Assessment** as the front door (no prices on the site)
 - Contact via `mailto:david.choukroun2@gmail.com`
-- Geometric wordmark (chevron A/V) in the header, footer, favicon, and Open Graph image
+- Official wordmark in the header, footer, favicon, and Open Graph image (see `public/brand/`)
 
 Preview hosting (Vercel or similar) is enough. Point `aidvance.xyz` at a host only when you decide to.
 

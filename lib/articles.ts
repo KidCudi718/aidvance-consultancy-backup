@@ -61,7 +61,7 @@ export const articles: Article[] = [
       {
         heading: "Red flags that are easy to miss",
         paragraphs: [
-          "Complimentary assessments are not automatically dishonest. They are structurally biased. The person giving away the diagnosis is usually recovering the cost in a platform fee, a retainer, or a build.",
+          "Complimentary assessments are not automatically dishonest. They are structurally biased. The person giving away the diagnosis is usually recovering the cost in a platform license, a retainer, or a build.",
           "Watch for language that cannot be falsified: transformation, unlock, intelligence layer, future-ready. Watch for a demo that uses someone else’s data. Watch for a recommendation that requires you to migrate files before anyone has counted how many files you have.",
           "Also watch for speed that feels like a favor. A two-day “strategy sprint” that never shadows a real workflow is a performance.",
         ],
@@ -69,7 +69,7 @@ export const articles: Article[] = [
       {
         heading: "What Aidvance sells instead",
         paragraphs: [
-          "The front door here is a fixed-fee AI Opportunity Assessment. You pay $999. You get a working session and a written brief. Implementation is scoped only after that brief exists, and only if you ask. There is no obligation to continue.",
+          "The front door here is an AI Opportunity Assessment. You get a working session and a written brief. Implementation is scoped only after that brief exists, and only if you ask. There is no obligation to continue.",
           "That structure is the product. It keeps the assessment from turning into a quote in costume. If you want a longer engagement later, you will be buying a defined piece of work, not repairing a vague promise.",
         ],
       },
@@ -129,7 +129,7 @@ export const articles: Article[] = [
         heading: "A cheaper order of operations",
         paragraphs: [
           "Count the work before you count the models. Write down three recurring jobs that eat hours. For each one, note volume, exceptions, and what “done” looks like. Only then look at tools.",
-          "If you want that written down with a second pair of eyes, that is the $999 assessment. If you want a stack first, you can buy a stack without us. Plenty of people will sell you one.",
+          "If you want that written down with a second pair of eyes, that is the assessment. If you want a stack first, you can buy a stack without us. Plenty of people will sell you one.",
         ],
       },
     ],
@@ -172,7 +172,7 @@ export const articles: Article[] = [
       {
         heading: "How to read the log without turning it into a workshop",
         paragraphs: [
-          "At the end of the week, sit with the log for an hour. Circle the waits and the rework. Those two cost more than almost any model fee. Then mark each step as judgment, transcription, lookup, or chase. Tools are good at lookup and transcription. They are uneven at judgment. They are useless at chase if nobody owns the follow-up.",
+          "At the end of the week, sit with the log for an hour. Circle the waits and the rework. Those two cost more than almost any model invoice. Then mark each step as judgment, transcription, lookup, or chase. Tools are good at lookup and transcription. They are uneven at judgment. They are useless at chase if nobody owns the follow-up.",
           "You will usually find that the “AI problem” is a handoff problem: the estimate lives in one person’s head, the invoice lives in another system, and the client lives in a third.",
         ],
       },
@@ -240,7 +240,7 @@ export const articles: Article[] = [
       {
         heading: "How we use a brief at Aidvance",
         paragraphs: [
-          "The $999 assessment assumes you can send something like the list above, even if it is rough. The working session is for the parts that do not survive email: the workarounds, the political facts, the “we tried that in 2023.”",
+          "The assessment assumes you can send something like the list above, even if it is rough. The working session is for the parts that do not survive email: the workarounds, the political facts, the “we tried that in 2023.”",
           "If you cannot write a brief yet, start with the workflow audit article and a week of notes. Come back when the lane has a name. We would rather wait than invent a project that only exists in a proposal.",
         ],
       },

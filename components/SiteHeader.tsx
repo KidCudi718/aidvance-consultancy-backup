@@ -13,7 +13,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="shell site-header__bar">
         <Link href="/" aria-label="Aidvance Consultancy home" onClick={() => setOpen(false)}>
-          <Logo compact />
+          <Logo size="nav" priority />
         </Link>
         <nav className="nav-desktop" aria-label="Primary">
           {nav.map((item) => (
@@ -21,8 +21,8 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a className="btn btn--accent" href={assessmentMailto()}>
-            Request assessment
+          <a className="btn btn--solid" href={assessmentMailto()}>
+            Request an assessment
           </a>
         </nav>
         <button
@@ -42,8 +42,8 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a className="btn btn--accent" href={assessmentMailto()} onClick={() => setOpen(false)}>
-            Request assessment
+          <a className="btn btn--solid" href={assessmentMailto()} onClick={() => setOpen(false)}>
+            Request an assessment
           </a>
         </nav>
       ) : null}

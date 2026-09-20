@@ -6,21 +6,19 @@ export const site = {
   email: "david.choukroun2@gmail.com",
   locale: "en_US",
   description:
-    "Independent AI consultancy for small and mid-size operators. A fixed-fee Opportunity Assessment before anyone sells you a stack.",
+    "Independent AI consultancy for small and mid-size operators. An Opportunity Assessment before anyone sells you a stack.",
   offer: {
     name: "AI Opportunity Assessment",
-    feeUsd: 999,
-    feeLabel: "$999",
     duration: "One working session plus a written brief",
   },
 } as const;
 
 export const assessmentMailto = (extraBody = ""): string => {
-  const subject = "AI Opportunity Assessment — $999";
+  const subject = "AI Opportunity Assessment";
   const body = [
     "Hello Aidvance,",
     "",
-    "I would like to request the $999 AI Opportunity Assessment.",
+    "I would like to request an AI Opportunity Assessment.",
     "",
     "Business / role:",
     "",
@@ -40,13 +38,7 @@ export const assessmentMailto = (extraBody = ""): string => {
 
 export const contactMailto = (extraBody = ""): string => {
   const subject = "Aidvance Consultancy — enquiry";
-  const body = [
-    "Hello Aidvance,",
-    "",
-    "What I need:",
-    "",
-    extraBody,
-  ].join("\n");
+  const body = ["Hello Aidvance,", "", "What I need:", "", extraBody].join("\n");
 
   return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 };

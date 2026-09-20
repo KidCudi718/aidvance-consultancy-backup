@@ -5,19 +5,18 @@ export function ResourceRows({ limit }: { limit?: number }) {
   const list = limit ? articles.slice(0, limit) : articles;
 
   return (
-    <div className="resource-index">
-      {list.map((article) => (
+    <div className="resource-grid">
+      {list.map((article, index) => (
         <Link
           key={article.slug}
           href={`/resources/${article.slug}`}
-          className="resource-row"
+          className="res-card"
         >
-          <div className="resource-row__meta">
-            <span>{article.published}</span>
-            <span>{article.minutes} min read</span>
-          </div>
-          <h3 className="resource-row__title">{article.title}</h3>
-          <p className="resource-row__dek">{article.dek}</p>
+          <span className="res-card__n">
+            {String(index + 1).padStart(2, "0")} · {article.minutes} min
+          </span>
+          <h3>{article.title}</h3>
+          <p>{article.dek}</p>
         </Link>
       ))}
     </div>

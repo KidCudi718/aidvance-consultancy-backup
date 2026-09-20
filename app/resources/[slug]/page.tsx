@@ -58,8 +58,8 @@ export default async function ArticlePage({ params }: PageProps) {
       <article>
         <header className="article-hero">
           <div className="shell">
-            <p className="kicker">
-              <span className="kicker__num">Note</span>
+            <p className="kicker kicker--split">
+              <span>Note</span>
               <span>
                 {article.published} · {article.minutes} min
               </span>
@@ -68,16 +68,20 @@ export default async function ArticlePage({ params }: PageProps) {
             <p className="lede">{article.dek}</p>
           </div>
         </header>
-        <div className="section section--tight" style={{ paddingTop: 0 }}>
+        <div className="article-frame">
           <div className="shell">
             <ArticleBody article={article} />
-            <div className="actions" style={{ marginTop: "2.5rem" }}>
-              <a className="btn btn--accent" href={assessmentMailto()}>
-                Request the $999 assessment
-              </a>
-              <Link className="btn" href="/resources">
-                All resources
-              </Link>
+            <div className="article-cta">
+              <p className="kicker">Next</p>
+              <h2 className="display display--sm">If this named your problem, write.</h2>
+              <div className="actions">
+                <a className="btn btn--solid" href={assessmentMailto()}>
+                  Request an assessment
+                </a>
+                <Link className="btn" href="/resources">
+                  All resources
+                </Link>
+              </div>
             </div>
           </div>
         </div>

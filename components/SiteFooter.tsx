@@ -8,21 +8,19 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="shell site-footer__grid">
         <div>
-          <Logo compact />
-          <p className="muted" style={{ marginTop: "1.1rem", maxWidth: "22rem" }}>
+          <Logo size="footer" />
+          <p className="muted footer-blurb">
             Independent AI consultancy. A written decision before anyone sells you a stack.
           </p>
         </div>
         <div>
-          <p className="kicker" style={{ marginBottom: "0.75rem" }}>
-            <span>Practice</span>
-          </p>
+          <p className="kicker">Practice</p>
           <ul>
             <li>
               <Link href="/#offer">AI Opportunity Assessment</Link>
             </li>
             <li>
-              <Link href="/assessment">What the fee covers</Link>
+              <Link href="/assessment">What you receive</Link>
             </li>
             <li>
               <Link href="/contact">Contact</Link>
@@ -33,9 +31,7 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="kicker" style={{ marginBottom: "0.75rem" }}>
-            <span>Resources</span>
-          </p>
+          <p className="kicker">Resources</p>
           <ul>
             {articles.map((article) => (
               <li key={article.slug}>
@@ -46,7 +42,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="shell fine">
-        © {new Date().getFullYear()} {site.name}. Independent practice.
+        © {new Date().getFullYear()} {site.name}
       </div>
     </footer>
   );
