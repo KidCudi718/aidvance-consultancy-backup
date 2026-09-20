@@ -1,0 +1,121 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+/**
+ * Mints a short-lived Speko voice session for the browser.
+ *
+ * SPEKO_API_KEY stays on the server. The browser only ever receives the
+ * transportToken / transportUrl pair, which expires on its own.
+ *
+ * The real risk with a public voice agent is not the per-minute rate, it is an
+ * open tab or a bot looping it. Three limits, all enforced here:
+ *   - ttlSeconds, so a session cannot outlive its welcome server-side
+ *   - one session per caller per hour
+ *   - a hard ceiling on sessions per day
+ * When a limit trips the caller gets a clean 429 and the page quietly falls
+ * back to the six-row list. Nobody sees an error.
+ */
+
+const SESSION_TTL_SECONDS = 210; // a little past the 180s client-side stop
+const PER_CALLER_COOLDOWN_MS = 60 * 60 * 1000;
+const DAILY_SESSION_CEILING = Number(process.env.CASEY_DAILY_LIMIT ?? 120);
+
+type Bucket = { day: string; count: number };
+
+const lastSeen = new Map<string, number>();
+const daily: Bucket = { day: "", count: 0 };
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function callerKey(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0]!.trim();
+  }
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
+function sweep(now: number): void {
+  for (const [key, seen] of lastSeen) {
+    if (now - seen > PER_CALLER_COOLDOWN_MS) {
+      lastSeen.delete(key);
+    }
+  }
+}
+
+export async function POST(request: Request): Promise<Response> {
+  const apiKey = process.env.SPEKO_API_KEY;
+  const agentId = process.env.SPEKO_AGENT_ID;
+
+  if (!apiKey || !agentId) {
+    // Not configured yet — the page falls back to the list.
+    return new Response("voice not configured", { status: 503 });
+  }
+
+  const now = Date.now();
+  sweep(now);
+
+  if (daily.day !== today()) {
+    daily.day = today();
+    daily.count = 0;
+  }
+  if (daily.count >= DAILY_SESSION_CEILING) {
+    return new Response("daily ceiling reached", { status: 429 });
+  }
+
+  const caller = callerKey(request);
+  const seen = lastSeen.get(caller);
+  if (seen && now - seen < PER_CALLER_COOLDOWN_MS) {
+    return new Response("already had a turn", { status: 429 });
+  }
+
+  let response: Response;
+  try {
+    response = await fetch("https://api.speko.dev/v1/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agentId,
+        ttlSeconds: SESSION_TTL_SECONDS,
+        metadata: { surface: "aidvance-homepage" },
+      }),
+    });
+  } catch (error) {
+    console.error(
+      "Speko session mint failed",
+      error instanceof Error ? error.message : "unknown error",
+    );
+    return new Response("voice unavailable", { status: 503 });
+  }
+
+  if (!response.ok) {
+    console.error("Speko session rejected", response.status);
+    return new Response("voice unavailable", { status: 503 });
+  }
+
+  const payload = (await response.json()) as {
+    transportToken?: string;
+    transportUrl?: string;
+  };
+
+  if (!payload.transportToken || !payload.transportUrl) {
+    console.error("Speko session missing transport credentials");
+    return new Response("voice unavailable", { status: 503 });
+  }
+
+  lastSeen.set(caller, now);
+  daily.count += 1;
+
+  return Response.json(
+    {
+      transportToken: payload.transportToken,
+      transportUrl: payload.transportUrl,
+    },
+    { headers: { "Cache-Control": "no-store" } },
+  );
+}
