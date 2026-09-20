@@ -27,7 +27,7 @@ function isCasey(source: string): boolean {
 export function CaseyLauncher({
   onCategory,
 }: {
-  /** Fires when Casey lands on one of the six categories. */
+  /** Fires when Casey lands on one of the nine categories. */
   onCategory: (key: PickerKey) => void;
 }) {
   const [live, setLive] = useState(false);
@@ -225,12 +225,10 @@ export function CaseyLauncher({
         </>
       ) : (
         <>
-          <p className={styles.note}>
-            A few minutes with Casey and she&apos;ll tell you straight which
-            bit of your week is worth fixing first, including when the answer
-            isn&apos;t AI at all. If it&apos;s worth a conversation, she&apos;ll
-            get you on the calendar.
-          </p>
+          {/* The button sits directly under the waveform, where the eye lands
+              first. Everything explanatory goes below it and stays short: the
+              old panel spent five lines describing a button nobody had a
+              reason to read about yet. */}
           <div className={styles.controls}>
             <button
               type="button"
@@ -239,15 +237,18 @@ export function CaseyLauncher({
               disabled={connecting}
             >
               <span className={styles.dot} aria-hidden="true" />
-              {connecting ? "Connecting…" : "Start talking"}
+              {connecting ? "Connecting…" : "Talk to Casey"}
             </button>
           </div>
+          <p className={styles.lead}>
+            Tell her what your week looks like. She&apos;ll tell you straight
+            where AI helps, and where it doesn&apos;t.
+          </p>
           {/* The disclosure lives here rather than in her opening line: the
               visitor reads it before pressing, so she can open like a person
               instead of a compliance notice. She never denies it if asked. */}
           <p className={styles.hint}>
-            Press once. Talk normally; she&apos;ll wait until you&apos;re
-            finished. Casey is an AI assistant.
+            Casey is an AI assistant. Press once and talk normally.
           </p>
           {blocked ? (
             <p className={styles.note} role="status">
