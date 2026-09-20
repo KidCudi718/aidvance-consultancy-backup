@@ -193,9 +193,11 @@ export function StartJourney() {
                     <b>{padN(index)}</b>
                     <div>
                       <p dangerouslySetInnerHTML={{ __html: row.html }} />
-                      <Link className="tlink" href={row.href}>
-                        Read: {row.title} →
-                      </Link>
+                      {row.href && row.title ? (
+                        <Link className="tlink" href={row.href}>
+                          Read: {row.title} →
+                        </Link>
+                      ) : null}
                     </div>
                   </li>
                 );
