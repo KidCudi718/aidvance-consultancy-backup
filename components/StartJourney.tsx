@@ -56,7 +56,7 @@ export function StartJourney() {
     scrollVerdictIfNeeded();
   };
 
-  // Casey resolved a category out loud. Same verdict band, same copy — the only
+  // Casey resolved a category out loud. Same verdict band, same copy, the only
   // difference is that nobody had to tap anything.
   const handleCaseyCategory = useCallback(
     (key: PickerKey) => {
@@ -86,13 +86,12 @@ export function StartJourney() {
             </span>
           </h1>
           <p className="lede lede--narrow">
-            Most of them pay twenty dollars a month for something nobody has
-            opened since March. You&apos;re one honest afternoon from being
-            ahead of them.
+            We work out which job in your week is actually worth fixing, and we
+            say so when the answer is not AI.
           </p>
           <div className="actions">
             <a className="btn btn--solid" href="#start">
-              Find your one thing →
+              Talk to Casey →
             </a>
             <Link className="text-link" href="/library/what-ai-actually-costs/">
               Or see what it costs
@@ -155,7 +154,7 @@ export function StartJourney() {
           {otherPicked ? (
             <div id="otherbox" className="otherbox">
               <label className="visually-hidden" htmlFor={otherFieldId}>
-                In your own words — what takes the most time?
+                In your own words, what takes the most time?
               </label>
               <input
                 id={otherFieldId}
@@ -163,7 +162,7 @@ export function StartJourney() {
                 className="otherbox__field"
                 type="text"
                 value={otherText}
-                placeholder="In your own words — what takes the most time?"
+                placeholder="In your own words, what takes the most time?"
                 onChange={(event) => setOtherText(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
@@ -240,10 +239,10 @@ export function StartJourney() {
                   </li>
                 ) : null}
               </ol>
-              {count >= 2 ? (
+              {count >= 1 ? (
                 <div className="vcta">
                   <Link className="btn btn--invert" href="/assessment/">
-                    Have someone map all of this for me →
+                    Have someone look at this properly →
                   </Link>
                 </div>
               ) : null}

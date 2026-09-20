@@ -47,19 +47,19 @@ const notFit = [
 const principles = [
   {
     title: "It won't fix a job nobody can explain.",
-    body: "If no one can say how the work gets done start to finish, no tool can do it for you. Half of what we do is writing that down for the first time — and a lot of problems die right there, before any software.",
+    body: "If nobody can say how the work gets done start to finish, no tool can do it for you. Half of what we do is writing that down for the first time, and a lot of problems die right there.",
   },
   {
     title: "It won't replace your best person.",
-    body: "What it does is give them back the forty minutes a day they spend retyping things they already have. That's the win. It's a bigger one than it sounds.",
+    body: "It gives them back the forty minutes a day they spend retyping things they already have. That is the win, and it is bigger than it sounds.",
   },
   {
     title: "It won't pay for itself because a website says so.",
-    body: "If a tool can't point at an hour you'll stop spending, it's a subscription, not an investment. You'll find it on your statement in March and wonder what it was.",
+    body: "If a tool can't point at an hour you will stop spending, it is a subscription, not an investment.",
   },
   {
     title: "And it won't wait for a perfect plan.",
-    body: "One job, fixed properly, beats a twelve-month roadmap every time. Pick the thing that annoys you most on a Tuesday and start there.",
+    body: "One job, fixed properly, beats a twelve-month roadmap. Pick the thing that annoys you most on a Tuesday.",
   },
 ] as const;
 
@@ -74,7 +74,7 @@ export default function HomePage() {
           <h2 className="display display--md">Want someone to just look at it for you?</h2>
           <p className="lede">
             One fixed fee, agreed before we start. Five business days. You keep
-            everything either way — whether or not we ever work together again.
+            everything either way.
           </p>
         </div>
       </section>
@@ -83,43 +83,39 @@ export default function HomePage() {
           <span className="step-panel__n">01</span>
           <h3>A working call, not a sales call</h3>
           <p>
-            Ninety minutes on how the work really gets done — who touches what,
-            where it stalls, what gets typed twice. Most owners tell us nobody
-            had ever asked.
+            Ninety minutes on how the work really gets done. Who touches what,
+            where it stalls, what gets typed twice.
           </p>
         </li>
         <li className="step-panel">
           <span className="step-panel__n">02</span>
           <h3>We take your week apart</h3>
           <p>
-            Every repeating task goes in one of three piles: fix it now, look at
-            it later, leave it alone. The third pile is usually the biggest, and
-            we&apos;ll say so.
+            Every repeating task goes in one of three piles: fix it now, look
+            at it later, leave it alone. The third pile is usually the biggest.
           </p>
         </li>
         <li className="step-panel">
           <span className="step-panel__n">03</span>
           <h3>You get it in writing, in plain English</h3>
           <p>
-            What we found, what to do about it, and in what order. No jargon, no
-            vendor logos. Every number in it is a number you gave us.
+            What we found, what to do about it, and in what order. No jargon
+            and no vendor logos.
           </p>
         </li>
         <li className="step-panel">
           <span className="step-panel__n">04</span>
           <h3>Then it&apos;s yours</h3>
           <p>
-            Nothing to cancel and nothing to renew. You can hand the plan to
-            anyone — us, someone else, or nobody.
+            Nothing to cancel, nothing to renew. Hand the plan to us, to
+            someone else, or to nobody.
           </p>
         </li>
       </ol>
       <div className="price-line">
         <div className="shell">
           <p>
-            One fixed fee, agreed in writing before anything starts. Ask and
-            you&apos;ll have a number the same day — there&apos;s no discovery
-            funnel to go through first.
+            Ask and you&apos;ll have a number the same day.
           </p>
           <div className="actions">
             <Link className="btn btn--solid" href="/assessment/">
@@ -188,8 +184,7 @@ export default function HomePage() {
           <h2 className="display display--md">We&apos;ll talk you out of things.</h2>
           <p className="lede">
             Most of what gets sold to small businesses as AI is a subscription
-            you&apos;ll forget you&apos;re paying for. Four things are worth
-            knowing before you spend anything.
+            you&apos;ll forget you&apos;re paying for. Four things to know first.
           </p>
         </div>
       </section>
@@ -210,7 +205,7 @@ export default function HomePage() {
             <h2 className="display display--md">Free guides. Nobody paid to be in here.</h2>
           </div>
           <Link className="text-link" href="/library/">
-            All 6 guides →
+            All six guides →
           </Link>
         </div>
         <LibraryCards limit={3} />
@@ -221,8 +216,7 @@ export default function HomePage() {
           <p className="kicker">Contact</p>
           <h2 className="display display--md">Write like a person. So will we.</h2>
           <p className="lede lede--tight">
-            You&apos;re writing to one person, not a support queue. Whoever
-            reads it is the same person who&apos;d do the work.
+            You&apos;re writing to one person, not a support queue.
           </p>
           <div className="actions">
             <Link className="btn btn--invert" href={contactPath()}>

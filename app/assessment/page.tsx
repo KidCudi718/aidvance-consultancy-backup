@@ -5,7 +5,7 @@ import { contactPath, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: site.offer.name,
   description:
-    "One fixed fee, agreed before we start. Five business days. You keep everything either way — whether or not we ever work together again.",
+    "One fixed fee, agreed before we start. Five business days. You keep everything either way, whether or not we ever work together again.",
   alternates: { canonical: "/assessment/" },
 };
 
@@ -18,7 +18,7 @@ export default function AssessmentPage() {
           <h1>Want someone to just look at it for you?</h1>
           <p className="lede">
             One fixed fee, agreed before we start. Five business days. You keep
-            everything either way — whether or not we ever work together again.
+            everything either way.
           </p>
         </div>
       </section>
@@ -28,7 +28,7 @@ export default function AssessmentPage() {
           <span className="step-panel__n">01</span>
           <h3>A working call, not a sales call</h3>
           <p>
-            Ninety minutes on how the work really gets done — who touches what,
+            Ninety minutes on how the work really gets done. Who touches what,
             where it stalls, what gets typed twice. Most owners tell us nobody
             had ever asked.
           </p>
@@ -37,9 +37,9 @@ export default function AssessmentPage() {
           <span className="step-panel__n">02</span>
           <h3>We take your week apart</h3>
           <p>
-            Every repeating task goes in one of three piles: fix it now, look at
-            it later, leave it alone. The third pile is usually the biggest, and
-            we&apos;ll say so.
+            Every repeating task goes in one of three piles: fix it now, look
+            at it later, leave it alone. The third pile is usually the biggest,
+            and we&apos;ll say so.
           </p>
         </li>
         <li className="step-panel">
@@ -54,8 +54,8 @@ export default function AssessmentPage() {
           <span className="step-panel__n">04</span>
           <h3>Then it&apos;s yours</h3>
           <p>
-            Nothing to cancel and nothing to renew. You can hand the plan to
-            anyone — us, someone else, or nobody.
+            Nothing to cancel, nothing to renew. Hand the plan to us, to
+            someone else, or to nobody.
           </p>
         </li>
       </ol>
@@ -63,9 +63,8 @@ export default function AssessmentPage() {
       <div className="price-line">
         <div className="shell">
           <p>
-            One fixed fee, agreed in writing before anything starts. Ask and
-            you&apos;ll have a number the same day — there&apos;s no discovery
-            funnel to go through first.
+            Ask and you&apos;ll have a number the same day. Nothing starts
+            until the fee is agreed in writing.
           </p>
           <div className="actions">
             <Link className="btn btn--solid" href={contactPath({ topic: "assessment" })}>

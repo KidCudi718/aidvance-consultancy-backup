@@ -65,7 +65,7 @@ export function CaseyLauncher({
   }, [teardown]);
 
   // Session clock. She gets a full minute of warning so she can finish the
-  // thought she is on and still close properly — being cut off mid-
+  // thought she is on and still close properly. Being cut off mid-
   // recommendation wastes the entire conversation.
   useEffect(() => {
     if (!live) {
@@ -146,7 +146,7 @@ export function CaseyLauncher({
         transportUrl: credentials.transportUrl,
         onModeChange: (next: "listening" | "speaking") => setMode(next),
         // onTranscript delivers the full reconciled transcript on every update.
-        // Do not append from onMessage — segments re-deliver cumulatively.
+        // Do not append from onMessage, segments re-deliver cumulatively.
         onTranscript: (messages: readonly Turn[]) => setTurns([...messages]),
         onDisconnect: () => {
           void teardown();
@@ -226,9 +226,10 @@ export function CaseyLauncher({
       ) : (
         <>
           <p className={styles.note}>
-            A few minutes with Casey and she&apos;ll tell you straight which bit
-            of your week is worth fixing first — including when the answer
-            isn&apos;t AI at all.
+            A few minutes with Casey and she&apos;ll tell you straight which
+            bit of your week is worth fixing first, including when the answer
+            isn&apos;t AI at all. If it&apos;s worth a conversation, she&apos;ll
+            get you on the calendar.
           </p>
           <div className={styles.controls}>
             <button
@@ -245,8 +246,8 @@ export function CaseyLauncher({
               visitor reads it before pressing, so she can open like a person
               instead of a compliance notice. She never denies it if asked. */}
           <p className={styles.hint}>
-            Press once — no need to hold it. Talk normally; she&apos;ll wait
-            until you&apos;re finished. Casey is an AI assistant.
+            Press once. Talk normally; she&apos;ll wait until you&apos;re
+            finished. Casey is an AI assistant.
           </p>
           {blocked ? (
             <p className={styles.note} role="status">

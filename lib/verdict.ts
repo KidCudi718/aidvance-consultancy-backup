@@ -33,7 +33,7 @@ export const verdictCopy: Record<
     href: "/library/stop-answering-the-same-questions/",
   },
   quote: {
-    html: "If quoting happens after dinner, you're not slow — you're doing the same assembly job by hand every time. The judgement in a quote is yours and stays yours. <em>The typing around it doesn't have to be.</em>",
+    html: "If quoting happens after dinner, you're not slow. You're doing the same assembly job by hand every time. The judgement in a quote stays yours. <em>The typing around it doesn't have to be.</em>",
     title: "Quotes and estimates without the evening shift",
     href: "/library/quotes-and-estimates/",
   },
@@ -43,7 +43,7 @@ export const verdictCopy: Record<
     href: "/library/ai-without-spending-a-dollar/",
   },
   sched: {
-    html: "Worth fixing — but probably not with AI. A booking link and one reminder rule solves most of this for <em>nothing</em>. We'd rather tell you that than sell you something.",
+    html: "Worth fixing, but probably not with AI. A booking link and one reminder rule solves most of this for <em>nothing</em>. We'd rather tell you that than sell you something.",
     title: "What this actually costs",
     href: "/library/what-ai-actually-costs/",
   },
@@ -55,7 +55,7 @@ export const verdictCopy: Record<
 };
 
 export const emptyVerdict =
-  "Pick what's eating your week. We'll tell you straight — including when AI isn't the answer.";
+  "Pick what's eating your week. We'll tell you straight, including when AI isn't the answer.";
 
 export function framingLine(count: number): string {
   if (count === 1) {
@@ -64,7 +64,7 @@ export function framingLine(count: number): string {
   if (count <= 3) {
     return "Start at the top and work down. The rest get easier once the first one is sorted.";
   }
-  return "That's most of a week. Don't try to fix it all at once — take the first one only.";
+  return "That's most of a week. Don't try to fix it all at once. Take the first one only.";
 }
 
 export function padN(index: number): string {
@@ -84,7 +84,7 @@ export function otherVerdict(text: string): { html: string; href: string | null;
   const trimmed = text.trim();
   if (trimmed) {
     return {
-      html: `&ldquo;${escapeHtml(trimmed)}&rdquo; — That's not on the list, which usually means it's specific to how <em>your</em> business runs. Those are the ones worth looking at properly — no off-the-shelf tool is shaped like your week.`,
+      html: `&ldquo;${escapeHtml(trimmed)}&rdquo; is not on the list, which usually means it's specific to how <em>your</em> business runs. Those are the ones worth looking at properly. No off-the-shelf tool is shaped like your week.`,
       href: contactPath({ message: trimmed, topic: "something-else" }),
       label: "Send it to me and I'll tell you if it's fixable →",
     };
