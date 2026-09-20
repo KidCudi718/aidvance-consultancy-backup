@@ -6,10 +6,15 @@
  * takes the guide and says "let me think about it" is the single most callable
  * lead on the site, and before this he left no trace at all.
  *
- * Writes go through PostgREST with Supabase's publishable key. That key is not
- * a secret; the protection is row-level security, which permits insert and
+ * Writes go through PostgREST with Supabase's anon key. That key is public by
+ * design; the protection is row-level security, which permits insert and
  * update on this one table and no reads whatsoever. If it leaked tomorrow the
  * worst anyone could do is add junk rows to a table only Dave can read.
+ *
+ * A plain insert, never an upsert. PostgREST resolves an upsert by first
+ * looking for the row it would collide with, which needs SELECT — and SELECT
+ * is the one thing this key must not have. Nothing needs upsert semantics
+ * here: log_conversation is the only writer and it runs once per conversation.
  */
 
 export type LeadRow = {
@@ -52,8 +57,8 @@ function trimmed(row: LeadRow): Record<string, unknown> {
 }
 
 /**
- * Save a lead. Never throws — a database that is having a bad afternoon must
- * not cost Casey a booking or leave a visitor listening to silence.
+ * Save a lead. Never throws — a database having a bad afternoon must not cost
+ * Casey a booking or leave a visitor listening to silence.
  */
 export async function saveLead(row: LeadRow): Promise<boolean> {
   const url = process.env.SUPABASE_URL;
@@ -76,9 +81,7 @@ export async function saveLead(row: LeadRow): Promise<boolean> {
         apikey: key,
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
-        // Upsert on session_id so a later write about the same conversation
-        // lands on the same row rather than creating a duplicate.
-        Prefer: "return=minimal,resolution=merge-duplicates",
+        Prefer: "return=minimal",
       },
       body: JSON.stringify(body),
     });
