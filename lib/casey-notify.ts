@@ -1,14 +1,17 @@
 /**
- * Everything a human reads after Casey books something.
+ * Everything a human reads after Casey finishes a conversation.
  *
- * Two emails, both sent by us rather than by Google. That is not a workaround
- * for its own sake: a service account cannot send Google's invitations without
+ * Emails are sent by us rather than by Google. That is not a workaround for
+ * its own sake: a service account cannot send Google's invitations without
  * domain-wide delegation, and sending them ourselves means the visitor gets
  * mail from aidvance.xyz instead of a personal Gmail address. Better outcome
  * for the reason we would have wanted anyway.
  */
 
 const RESEND_URL = "https://api.resend.com/emails";
+
+/** What happened at the end of the conversation. Drives subject and opening. */
+export type AlertKind = "live" | "booked" | "email" | "conversation";
 
 export type Briefing = {
   name: string;
@@ -111,7 +114,7 @@ async function send(args: {
   const from =
     process.env.CASEY_FROM?.trim() ||
     process.env.CONTACT_FROM?.trim() ||
-    "Aidvance Consultancy <onboarding@resend.dev>";
+    "Casey at A.I. Advance <onboarding@resend.dev>";
 
   try {
     const response = await fetch(RESEND_URL, {
@@ -151,20 +154,48 @@ export function daveInbox(): string {
   );
 }
 
-/** Tell Dave. Subject line carries enough that he can act without opening it. */
+/**
+ * Tell Dave.
+ *
+ * The subject has to carry the whole verdict on its own, because that is all
+ * he sees on a lock screen and it decides whether he opens it now or later.
+ * Someone waiting on a call this minute must not read like someone who took
+ * a guide and wandered off.
+ */
 export async function alertDave(args: {
   brief: Briefing;
-  live: boolean;
-  spokenTime: string;
-  eventLink: string;
+  kind: AlertKind;
+  /** Only meaningful when kind is "booked". */
+  spokenTime?: string;
+  eventLink?: string;
 }): Promise<boolean> {
-  const subject = args.live
-    ? `CALL NOW — ${headline(args.brief)}${args.brief.phone ? ` · ${args.brief.phone}` : ""}`
-    : `Booked ${args.spokenTime} — ${headline(args.brief)}`;
+  const who = headline(args.brief);
+  const phoneSuffix = args.brief.phone ? ` · ${args.brief.phone}` : "";
 
-  const opening = args.live
-    ? `Casey just told them you'd call in the next few minutes. They are waiting.`
-    : `Casey booked this for ${args.spokenTime}.`;
+  let subject: string;
+  let opening: string;
+
+  switch (args.kind) {
+    case "live":
+      subject = `CALL NOW — ${who}${phoneSuffix}`;
+      opening =
+        "Casey just told them you'd call in the next few minutes. They are waiting.";
+      break;
+    case "booked":
+      subject = `Booked ${args.spokenTime ?? ""} — ${who}`.replace("  ", " ");
+      opening = `Casey booked this for ${args.spokenTime ?? "a time on your calendar"}.`;
+      break;
+    case "email":
+      subject = `Lead — took the guide, no call yet — ${who}`;
+      opening =
+        "No meeting. She handed over the guide and got their email, and they wanted to read it first. Worth a call in a few days — this is the one you would never have heard about.";
+      break;
+    default:
+      subject = `Lead — talked, didn't book — ${who}`;
+      opening =
+        "No meeting and no email. They talked, then left. Everything she got is below, in case it is worth chasing.";
+      break;
+  }
 
   const text = [
     opening,

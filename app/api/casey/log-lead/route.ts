@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
  * She is told to call it even when the answer was no. Especially then.
  */
 
-type Body = LeadRow & { notify?: boolean };
+type Body = LeadRow;
 
 export async function POST(request: Request): Promise<Response> {
   const denied = caseyToolGuard(request);
@@ -37,13 +37,13 @@ export async function POST(request: Request): Promise<Response> {
       : "conversation";
 
   const row: LeadRow = { ...body, outcome };
-  delete (row as Body).notify;
 
   after(async () => {
     await saveLead(row);
 
-    // A booking already sent Dave a briefing. Anything else is the quiet lead
-    // he would otherwise never hear about, so that is the one worth a ping.
+    // A booking already sent Dave a briefing when the event was created.
+    // Anything else is the quiet lead he would otherwise never hear about,
+    // so that is the one worth a ping.
     if (outcome !== "booked" && row.name) {
       const brief: Briefing = {
         name: row.name,
@@ -63,15 +63,7 @@ export async function POST(request: Request): Promise<Response> {
         email: row.email,
         notes: row.notes,
       };
-      await alertDave({
-        brief,
-        live: false,
-        spokenTime:
-          outcome === "email"
-            ? "no meeting — she took their email"
-            : "no meeting, no email",
-        eventLink: "",
-      });
+      await alertDave({ brief, kind: outcome === "email" ? "email" : "conversation" });
     }
   });
 
