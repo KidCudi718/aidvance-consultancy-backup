@@ -7,6 +7,7 @@ export type ArticleSection = {
 export type Article = {
   slug: string;
   title: string;
+  shortTitle: string;
   dek: string;
   published: string;
   updated: string;
@@ -18,6 +19,7 @@ export const articles: Article[] = [
   {
     slug: "assessment-versus-hype",
     title: "An assessment is not a sales pitch with extra slides",
+    shortTitle: "Assessment versus hype",
     dek: "How a useful AI evaluation differs from a vendor readiness workshop that ends in a quote.",
     published: "2026-03-12",
     updated: "2026-03-12",
@@ -76,6 +78,7 @@ export const articles: Article[] = [
   {
     slug: "where-smbs-waste-money-on-ai",
     title: "Where small businesses actually waste money on AI",
+    shortTitle: "Where SMBs waste money",
     dek: "The spend is usually seats, retainers, and tools bought before anyone named the job.",
     published: "2026-03-18",
     updated: "2026-03-18",
@@ -134,6 +137,7 @@ export const articles: Article[] = [
   {
     slug: "workflow-audit-before-tools",
     title: "Do a workflow audit before you buy another tool",
+    shortTitle: "Audit the work first",
     dek: "Shadow the work for a week. The exceptions are the job. The software is optional.",
     published: "2026-03-24",
     updated: "2026-03-24",
@@ -191,6 +195,7 @@ export const articles: Article[] = [
   {
     slug: "how-to-brief-a-consultant",
     title: "How to brief a consultant so the work stays small",
+    shortTitle: "How to brief a consultant",
     dek: "Send the facts before the call. Name done. Name off-limits. Keep the ocean from being boiled.",
     published: "2026-04-02",
     updated: "2026-04-02",
@@ -244,6 +249,7 @@ export const articles: Article[] = [
   {
     slug: "when-not-to-automate",
     title: "When you should not automate",
+    shortTitle: "When not to automate",
     dek: "Some work gets worse when you speed it up. Here is how to leave it alone on purpose.",
     published: "2026-04-09",
     updated: "2026-04-09",

@@ -39,15 +39,14 @@ export function SiteFooter() {
           <ul>
             {articles.map((article) => (
               <li key={article.slug}>
-                <Link href={`/resources/${article.slug}`}>{article.title}</Link>
+                <Link href={`/resources/${article.slug}`}>{article.shortTitle}</Link>
               </li>
             ))}
           </ul>
         </div>
       </div>
       <div className="shell fine">
-        © {new Date().getFullYear()} {site.name}. Intended home: {site.domain}. DNS is configured
-        by the owner, not by this repository.
+        © {new Date().getFullYear()} {site.name}. Independent practice.
       </div>
     </footer>
   );
