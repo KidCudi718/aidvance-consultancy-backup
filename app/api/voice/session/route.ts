@@ -78,6 +78,10 @@ export async function POST(request: Request): Promise<Response> {
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        // Required when the session points at a speech-to-speech agent: it lets
+        // a bootstrap that times out be retried without opening a second
+        // session. Without it the API rejects the request outright.
+        "Idempotency-Key": crypto.randomUUID(),
       },
       body: JSON.stringify({
         agentId,
@@ -94,7 +98,10 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!response.ok) {
-    console.error("Speko session rejected", response.status);
+    // Log the body, not just the status. A bare status code tells you nothing
+    // about why the call was refused.
+    const detail = await response.text().catch(() => "");
+    console.error("Speko session rejected", response.status, detail.slice(0, 500));
     return new Response("voice unavailable", { status: 503 });
   }
 
