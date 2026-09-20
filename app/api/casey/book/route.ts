@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { busyBlocks, createEvent } from "@/lib/google-calendar";
 import {
   SLOT_MINUTES,
@@ -167,25 +168,28 @@ export async function POST(request: Request): Promise<Response> {
 
   const spokenTime = wantsLive ? "in a few minutes" : spokenForInstant(new Date(startIso), now);
 
-  // Neither email can fail the booking — the meeting existing matters more.
-  const [daveTold, visitorTold] = await Promise.all([
-    alertDave({ brief, live: wantsLive, spokenTime, eventLink: event.link }),
-    confirmToVisitor({ brief, live: wantsLive, spokenTime }),
-  ]);
-
-  if (!daveTold) {
-    console.error("Booking created but Dave was not emailed", event.id);
-  }
+  // Both emails happen after the response goes back. Casey is mid-sentence
+  // waiting on this call, and a person hearing two seconds of silence is a
+  // worse outcome than a briefing that lands a moment later. Neither email
+  // could have failed the booking anyway — the meeting existing matters more.
+  after(async () => {
+    const [daveTold] = await Promise.all([
+      alertDave({ brief, live: wantsLive, spokenTime, eventLink: event.link }),
+      confirmToVisitor({ brief, live: wantsLive, spokenTime }),
+    ]);
+    if (!daveTold) {
+      console.error("Booking created but Dave was not emailed", event.id);
+    }
+  });
 
   return Response.json(
     {
       booked: true,
       live: wantsLive,
       startIso,
-      confirmationEmailed: visitorTold,
       reply: wantsLive
         ? "Done — Dave has it and he's calling them in the next few minutes. Tell them that, tell them roughly how long it'll be, and say goodbye warmly."
-        : `Done — it's on his calendar for ${spokenTime}. Say it back to them once so they've heard it, mention the confirmation email${visitorTold ? "" : " is coming from Dave shortly"}, and close warmly.`,
+        : `Done — it's on his calendar for ${spokenTime}. Say it back to them once so they've heard it, tell them a confirmation email is on its way, and close warmly.`,
     },
     { headers: { "Cache-Control": "no-store" } },
   );
