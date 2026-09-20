@@ -9,6 +9,73 @@ export const metadata: Metadata = {
   alternates: { canonical: "/assessment/" },
 };
 
+/**
+ * Everything that sells lives here and nowhere else.
+ *
+ * The homepage is a diagnostic; this page is the offer. Anything that answers
+ * "should I buy this" belongs on this side of the line, including the parts
+ * that talk people out of it.
+ */
+const walkAway = [
+  {
+    title: "What we looked at",
+    body: "The lane of work you named, including the messy exceptions.",
+  },
+  {
+    title: "The findings, sorted",
+    body: "Everything we heard, prioritized, with the reasoning shown.",
+  },
+  {
+    title: "A ranked roadmap",
+    body: "What to do first, second, third, and who needs to be involved.",
+  },
+  {
+    title: "Written procedures",
+    body: "How the job is done today. Often the first time it has existed on paper.",
+  },
+  {
+    title: "What you can do yourself, and what needs a builder",
+    body: "An honest split, so you don't pay for help you don't need.",
+  },
+  {
+    title: "What to leave alone",
+    body: "The work that gets worse when you speed it up. Usually the longest list.",
+  },
+] as const;
+
+const fit = [
+  "You run the business, or you can decide without a committee.",
+  "Something in your week is clearly repetitive and getting worse.",
+  "You'd rather be told what not to do than be sold a platform.",
+  "Between one and roughly fifty people.",
+] as const;
+
+const notFit = [
+  "You want somebody to build software. We'll introduce you to people who do.",
+  "You're looking for a headcount reduction plan. That isn't this.",
+  "You need a decision this afternoon. The work takes five business days.",
+  "You want us to say AI will transform everything. It won't, and we won't.",
+] as const;
+
+const principles = [
+  {
+    title: "It won't fix a job nobody can explain.",
+    body: "If nobody can say how the work gets done start to finish, no tool can do it for you. Half of what we do is writing that down for the first time, and a lot of problems die right there.",
+  },
+  {
+    title: "It won't replace your best person.",
+    body: "It gives them back the forty minutes a day they spend retyping things they already have. That is the win, and it is bigger than it sounds.",
+  },
+  {
+    title: "It won't pay for itself because a website says so.",
+    body: "If a tool can't point at an hour you will stop spending, it is a subscription, not an investment.",
+  },
+  {
+    title: "And it won't wait for a perfect plan.",
+    body: "One job, fixed properly, beats a twelve-month roadmap. Pick the thing that annoys you most on a Tuesday.",
+  },
+] as const;
+
 export default function AssessmentPage() {
   return (
     <>
@@ -58,6 +125,76 @@ export default function AssessmentPage() {
             someone else, or to nobody.
           </p>
         </li>
+      </ol>
+
+      <section className="section" id="deliverable">
+        <div className="shell">
+          <p className="kicker">What you walk away with</p>
+          <h2 className="display display--md">
+            Six documents, all of them plain English.
+          </h2>
+        </div>
+        <div className="memo memo--static" aria-label="What you walk away with">
+          <div className="memo__rule">
+            <span>Aidvance Consultancy</span>
+            <span>The file you keep</span>
+          </div>
+          <ol className="memo__list">
+            {walkAway.map((item) => (
+              <li key={item.title}>
+                <strong>{item.title}</strong>
+                <span>{item.body}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div className="shell">
+          <p className="closing-note">
+            Every figure in the report is a figure you gave us. We don&apos;t
+            model savings you didn&apos;t describe.
+          </p>
+        </div>
+      </section>
+
+      <section id="fit">
+        <div className="split-pair">
+          <div className="split">
+            <h3>When this is worth your money</h3>
+            <ul>
+              {fit.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="split split--ink">
+            <h3>When we&apos;ll tell you to keep it</h3>
+            <ul>
+              {notFit.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--tight" id="principles">
+        <div className="shell">
+          <p className="kicker">Before you spend anything</p>
+          <h2 className="display display--md">We&apos;ll talk you out of things.</h2>
+          <p className="lede">
+            Most of what gets sold to small businesses as AI is a subscription
+            you&apos;ll forget you&apos;re paying for. Four things to know first.
+          </p>
+        </div>
+      </section>
+      <ol className="steps-strip">
+        {principles.map((item, index) => (
+          <li className="step-panel" key={item.title}>
+            <span className="step-panel__n">{String(index + 1).padStart(2, "0")}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </li>
+        ))}
       </ol>
 
       <div className="price-line">

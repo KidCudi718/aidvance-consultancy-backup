@@ -1,18 +1,30 @@
 import { contactPath } from "@/lib/site";
 
-export type PickerKey = "faq" | "quote" | "admin" | "sched" | "train" | "other";
+export type PickerKey =
+  | "faq"
+  | "quote"
+  | "admin"
+  | "sched"
+  | "bottleneck"
+  | "train"
+  | "afterhours"
+  | "leads"
+  | "other";
 
 export const pickerRows: ReadonlyArray<{
   key: PickerKey;
   n: string;
   label: string;
 }> = [
-  { key: "faq", n: "01", label: "Answering the same questions" },
-  { key: "quote", n: "02", label: "Quotes, estimates and proposals" },
-  { key: "admin", n: "03", label: "Paperwork, data entry, retyping the same information" },
-  { key: "sched", n: "04", label: "Scheduling and chasing people" },
-  { key: "train", n: "05", label: "Training people, repeating myself" },
-  { key: "other", n: "06", label: "Something else" },
+  { key: "faq", n: "01", label: "I answer the same handful of questions every day" },
+  { key: "quote", n: "02", label: "I write quotes and estimates at night, after everything else" },
+  { key: "admin", n: "03", label: "I type the same information into two or three different places" },
+  { key: "sched", n: "04", label: "Half my week is chasing people to confirm, show up, or pay" },
+  { key: "bottleneck", n: "05", label: "Everything has to come through me before it can happen" },
+  { key: "train", n: "06", label: "Every new person learns the job by watching me" },
+  { key: "afterhours", n: "07", label: "Calls and messages come in after hours and nobody answers" },
+  { key: "leads", n: "08", label: "Leads come in and some of them just go cold" },
+  { key: "other", n: "09", label: "Something else" },
 ];
 
 export const verdictOrder: Exclude<PickerKey, "other">[] = [
@@ -20,7 +32,10 @@ export const verdictOrder: Exclude<PickerKey, "other">[] = [
   "quote",
   "admin",
   "sched",
+  "bottleneck",
   "train",
+  "afterhours",
+  "leads",
 ];
 
 export const verdictCopy: Record<
@@ -52,10 +67,22 @@ export const verdictCopy: Record<
     title: "Getting it out of your head and onto paper",
     href: "/library/ai-for-hiring-and-onboarding/",
   },
+  bottleneck: {
+    html: "The most common one on this list and the hardest to say out loud. It is almost never that nobody else <em>could</em> do it. It is that nobody has ever written down how. That is a weekend, not a software project.",
+    title: "Getting it out of your head and onto paper",
+    href: "/library/ai-for-hiring-and-onboarding/",
+  },
+  afterhours: {
+    html: "Worth being honest about: a robot that answers wrongly at midnight does more damage than silence. What works is a real answers page, and a holding reply that says <em>a person will call you in the morning</em>.",
+    title: "Stop answering the same five questions",
+    href: "/library/stop-answering-the-same-questions/",
+  },
+  leads: {
+    html: "Almost never a lead problem. It is a follow-up problem, and follow-up is the highest-return thing on this whole list because nobody does it. <em>One short note a week later</em> moves the win rate more than anything else you could change.",
+    title: "Quotes and estimates without the evening shift",
+    href: "/library/quotes-and-estimates/",
+  },
 };
-
-export const emptyVerdict =
-  "Pick what's eating your week. We'll tell you straight, including when AI isn't the answer.";
 
 export function framingLine(count: number): string {
   if (count === 1) {

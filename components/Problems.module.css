@@ -1,0 +1,104 @@
+/* The problem grid.
+
+   Nine squares carrying the weight the old homepage spread across twelve
+   sections. Same border language as the steps strip and the library cards:
+   full bleed, one hairline between cells, hover inverts to ink. Scoped as a
+   module so none of it can reach the rest of the site. */
+
+.section {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) 0;
+}
+
+.hint {
+  margin: 0.9rem 0 1.85rem;
+  max-width: 34rem;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  border-top: 1px solid var(--ink);
+}
+
+@media (min-width: 620px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 11rem;
+  width: 100%;
+  margin: 0;
+  padding: 1.35rem 1.4rem 1.55rem;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (min-width: 620px) {
+  .tile {
+    border-right: 1px solid var(--ink);
+  }
+
+  .grid .tile:nth-child(2n) {
+    border-right: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .grid .tile:nth-child(2n) {
+    border-right: 1px solid var(--ink);
+  }
+
+  .grid .tile:nth-child(3n) {
+    border-right: 0;
+  }
+}
+
+.tile:hover,
+.tile[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.n {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+}
+
+.label {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 1.65vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.mark {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.other {
+  padding-top: 1.6rem;
+}
