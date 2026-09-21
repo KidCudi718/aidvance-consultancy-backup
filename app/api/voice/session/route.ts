@@ -19,9 +19,9 @@ export const dynamic = "force-dynamic";
  * back to the six-row list. Nobody sees an error.
  */
 
-// Sits just past the 360s client-side stop, so the client always ends the
+// Sits just past the 900s client-side stop, so the client always ends the
 // conversation deliberately rather than having the token die underneath it.
-const SESSION_TTL_SECONDS = 420;
+const SESSION_TTL_SECONDS = 960;
 
 /**
  * How long one visitor waits before they can start again.
