@@ -1,18 +1,30 @@
 import { contactPath } from "@/lib/site";
 
-export type PickerKey = "faq" | "quote" | "admin" | "sched" | "train" | "other";
+export type PickerKey =
+  | "faq"
+  | "quote"
+  | "admin"
+  | "sched"
+  | "bottleneck"
+  | "train"
+  | "afterhours"
+  | "leads"
+  | "other";
 
 export const pickerRows: ReadonlyArray<{
   key: PickerKey;
   n: string;
   label: string;
 }> = [
-  { key: "faq", n: "01", label: "Answering the same questions" },
-  { key: "quote", n: "02", label: "Quotes, estimates and proposals" },
-  { key: "admin", n: "03", label: "Paperwork, data entry, retyping the same information" },
-  { key: "sched", n: "04", label: "Scheduling and chasing people" },
-  { key: "train", n: "05", label: "Training people, repeating myself" },
-  { key: "other", n: "06", label: "Something else" },
+  { key: "faq", n: "01", label: "I answer the same handful of questions every day" },
+  { key: "quote", n: "02", label: "I write quotes and estimates at night, after everything else" },
+  { key: "admin", n: "03", label: "I type the same information into two or three different places" },
+  { key: "sched", n: "04", label: "Half my week is chasing people to confirm, show up, or pay" },
+  { key: "bottleneck", n: "05", label: "Everything has to come through me before it can happen" },
+  { key: "train", n: "06", label: "Every new person learns the job by watching me" },
+  { key: "afterhours", n: "07", label: "Calls and messages come in after hours and nobody answers" },
+  { key: "leads", n: "08", label: "Leads come in and some of them just go cold" },
+  { key: "other", n: "09", label: "Something else" },
 ];
 
 export const verdictOrder: Exclude<PickerKey, "other">[] = [
@@ -20,12 +32,23 @@ export const verdictOrder: Exclude<PickerKey, "other">[] = [
   "quote",
   "admin",
   "sched",
+  "bottleneck",
   "train",
+  "afterhours",
+  "leads",
 ];
 
+/**
+ * A row only carries a guide link when the library actually has a guide about
+ * that problem. Three of these do not, and pointing them at the nearest
+ * neighbour made the page look broken: you clicked "calls come in after hours"
+ * and got an article titled "stop answering the same five questions", which
+ * reads as the wrong thing opening. Better to say the honest read and send
+ * them to Casey.
+ */
 export const verdictCopy: Record<
   Exclude<PickerKey, "other">,
-  { html: string; title: string; href: string }
+  { html: string; title?: string; href?: string }
 > = {
   faq: {
     html: "The most fixable thing on this list. The same five questions come in forever. Answer each one properly <em>once</em>, put the answers where they work while you sleep, and the after-hours problem mostly solves itself.",
@@ -33,7 +56,7 @@ export const verdictCopy: Record<
     href: "/library/stop-answering-the-same-questions/",
   },
   quote: {
-    html: "If quoting happens after dinner, you're not slow — you're doing the same assembly job by hand every time. The judgement in a quote is yours and stays yours. <em>The typing around it doesn't have to be.</em>",
+    html: "If quoting happens after dinner, you're not slow. You're doing the same assembly job by hand every time. The judgement in a quote stays yours. <em>The typing around it doesn't have to be.</em>",
     title: "Quotes and estimates without the evening shift",
     href: "/library/quotes-and-estimates/",
   },
@@ -43,7 +66,7 @@ export const verdictCopy: Record<
     href: "/library/ai-without-spending-a-dollar/",
   },
   sched: {
-    html: "Worth fixing — but probably not with AI. A booking link and one reminder rule solves most of this for <em>nothing</em>. We'd rather tell you that than sell you something.",
+    html: "Worth fixing, but probably not with AI. A booking link and one reminder rule solves most of this for <em>nothing</em>. We'd rather tell you that than sell you something.",
     title: "What this actually costs",
     href: "/library/what-ai-actually-costs/",
   },
@@ -52,10 +75,16 @@ export const verdictCopy: Record<
     title: "Getting it out of your head and onto paper",
     href: "/library/ai-for-hiring-and-onboarding/",
   },
+  bottleneck: {
+    html: "The most common one on this list and the hardest to say out loud. It is almost never that nobody else <em>could</em> do it. It is that nobody has ever written down how. That is a weekend, not a software project.",
+  },
+  afterhours: {
+    html: "Worth being honest about: a robot that answers wrongly at midnight does more damage than silence. What works is a real answers page, and a holding reply that says <em>a person will call you in the morning</em>.",
+  },
+  leads: {
+    html: "Almost never a lead problem. It is a follow-up problem, and follow-up is the highest-return thing on this whole list because nobody does it. <em>One short note a week later</em> moves the win rate more than anything else you could change.",
+  },
 };
-
-export const emptyVerdict =
-  "Pick what's eating your week. We'll tell you straight — including when AI isn't the answer.";
 
 export function framingLine(count: number): string {
   if (count === 1) {
@@ -64,7 +93,7 @@ export function framingLine(count: number): string {
   if (count <= 3) {
     return "Start at the top and work down. The rest get easier once the first one is sorted.";
   }
-  return "That's most of a week. Don't try to fix it all at once — take the first one only.";
+  return "That's most of a week. Don't try to fix it all at once. Take the first one only.";
 }
 
 export function padN(index: number): string {
@@ -84,14 +113,14 @@ export function otherVerdict(text: string): { html: string; href: string | null;
   const trimmed = text.trim();
   if (trimmed) {
     return {
-      html: `&ldquo;${escapeHtml(trimmed)}&rdquo; — That's not on the list, which usually means it's specific to how <em>your</em> business runs. Those are the ones worth looking at properly — no off-the-shelf tool is shaped like your week.`,
+      html: `&ldquo;${escapeHtml(trimmed)}&rdquo; is not on the list, which usually means it's specific to how <em>your</em> business runs. Those are the ones worth looking at properly. No off-the-shelf tool is shaped like your week.`,
       href: contactPath({ message: trimmed, topic: "something-else" }),
       label: "Send it to me and I'll tell you if it's fixable →",
     };
   }
 
   return {
-    html: "Tell us what it is in the box above. If it isn't on this list it's usually specific to your business, and those are the ones worth a proper look.",
+    html: "Type it into the box under the grid. If it isn't on this list it's usually specific to your business, and those are the ones worth a proper look.",
     href: null,
     label: null,
   };

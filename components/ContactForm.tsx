@@ -18,7 +18,7 @@ export function ContactForm({
   if (succeeded) {
     return (
       <p className="contact-form__success" role="status">
-        Got it — I&apos;ll reply by email.
+        Got it. I&apos;ll reply by email.
       </p>
     );
   }

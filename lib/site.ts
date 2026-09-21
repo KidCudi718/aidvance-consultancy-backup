@@ -7,7 +7,7 @@ export const site = {
   city: "New York",
   year: 2026,
   description:
-    "Most businesses pay twenty dollars a month for something nobody has opened since March. Aidvance helps owner-operators find the one job worth fixing — and says so when AI is not the answer.",
+    "Aidvance works out which job in your week is actually worth fixing, and says so when the answer is not AI. One fixed fee, five business days, for owner-operators.",
   offer: {
     name: "The Assessment",
     duration: "One fixed fee, agreed before we start. Five business days.",

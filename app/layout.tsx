@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { OrganizationJsonLd } from "@/components/JsonLd";
@@ -30,8 +31,8 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — They're not.`,
-    template: `%s — ${site.name}`,
+    default: `${site.name} · AI for small business, in plain English`,
+    template: `%s · ${site.name}`,
   },
   description: site.description,
   applicationName: site.name,
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     locale: site.locale,
     url: site.url,
     siteName: site.name,
-    title: `${site.name} — They're not.`,
+    title: `${site.name} · AI for small business, in plain English`,
     description: site.description,
     images: [
       {
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — They're not.`,
+    title: `${site.name} · AI for small business, in plain English`,
     description: site.description,
   },
   robots: {
@@ -102,6 +103,8 @@ export default function RootLayout({
         <SiteHeader />
         <main id="content">{children}</main>
         <SiteFooter />
+        {/* Counts visits without a cookie, so nothing here needs a consent banner. */}
+        <Analytics />
       </body>
     </html>
   );
