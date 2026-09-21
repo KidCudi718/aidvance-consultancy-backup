@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type MutableRefObject,
+} from "react";
 import { Waveform, type WaveState } from "./Waveform";
 import {
   CASEY_BLOCK_COPY,
@@ -19,6 +25,25 @@ type Conversation = {
   sendContextualUpdate?: (text: string) => void;
 };
 
+/**
+ * Every visible state the panel can be in. The brief's table is the contract:
+ * each one has to be obvious within about a tenth of a second of the change,
+ * and no two may look alike.
+ *
+ * `requesting_mic` is separate from `connecting` on purpose. They feel like
+ * one step to whoever built it and like two to whoever is waiting: the first
+ * is the browser asking permission, the second is us reaching the server. If
+ * they share a label, a visitor staring at a permission dialog is told we are
+ * "connecting", which is not what is happening.
+ */
+type Phase =
+  | "idle"
+  | "requesting_mic"
+  | "connecting"
+  | "live"
+  | "done"
+  | "blocked";
+
 function isCasey(source: string): boolean {
   const s = source.toLowerCase();
   return s === "ai" || s === "agent" || s === "assistant" || s === "casey";
@@ -26,12 +51,20 @@ function isCasey(source: string): boolean {
 
 export function CaseyLauncher({
   onCategory,
+  contextLabels = [],
+  startRef,
+  onNeedList,
 }: {
   /** Fires when Casey lands on one of the nine categories. */
   onCategory: (key: PickerKey) => void;
+  /** What the visitor already ticked, handed to her so she does not re-ask. */
+  contextLabels?: string[];
+  /** Filled with a function the parent can call to open her from elsewhere. */
+  startRef?: MutableRefObject<(() => void) | null>;
+  /** Send someone to the list when the microphone is not an option. */
+  onNeedList?: () => void;
 }) {
-  const [live, setLive] = useState(false);
-  const [connecting, setConnecting] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
   const [mode, setMode] = useState<"listening" | "speaking">("listening");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [blocked, setBlocked] = useState<CaseyBlockReason | null>(null);
@@ -41,6 +74,18 @@ export function CaseyLauncher({
   const conversationRef = useRef<Conversation | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const reportedRef = useRef(false);
+  // Did a real conversation happen? Decides whether ending lands on "done"
+  // (with a wrap and a way back in) or quietly back on "idle".
+  const hadSessionRef = useRef(false);
+  // Read at the moment a session opens, not during render, so starting a call
+  // never depends on which render last wrote this.
+  const contextRef = useRef<string[]>(contextLabels);
+  useEffect(() => {
+    contextRef.current = contextLabels;
+  }, [contextLabels]);
+
+  const live = phase === "live";
+  const busy = phase === "requesting_mic" || phase === "connecting";
 
   const teardown = useCallback(async () => {
     const conversation = conversationRef.current;
@@ -53,9 +98,8 @@ export function CaseyLauncher({
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
     setStream(null);
-    setLive(false);
-    setConnecting(false);
     setSeconds(0);
+    setPhase(hadSessionRef.current ? "done" : "idle");
   }, []);
 
   useEffect(() => {
@@ -103,20 +147,21 @@ export function CaseyLauncher({
 
   const start = useCallback(async () => {
     setBlocked(null);
-    setConnecting(true);
     reportedRef.current = false;
     setTurns([]);
+    setPhase("requesting_mic");
 
     let micStream: MediaStream;
     try {
       micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch {
-      setConnecting(false);
+      setPhase("blocked");
       setBlocked("mic-denied");
       return;
     }
     streamRef.current = micStream;
     setStream(micStream);
+    setPhase("connecting");
 
     let credentials: { transportToken: string; transportUrl: string };
     try {
@@ -132,7 +177,7 @@ export function CaseyLauncher({
       micStream.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
       setStream(null);
-      setConnecting(false);
+      setPhase("blocked");
       setBlocked(
         error instanceof Error && error.message === "busy" ? "busy" : "unavailable",
       );
@@ -157,46 +202,84 @@ export function CaseyLauncher({
         },
       });
       conversationRef.current = conversation as unknown as Conversation;
-      setConnecting(false);
-      setLive(true);
+      hadSessionRef.current = true;
+      setPhase("live");
+
+      // She is told what they already ticked, so the conversation starts where
+      // the page left off instead of asking them the same question twice.
+      const picked = contextRef.current;
+      if (picked.length > 0) {
+        conversation.sendContextualUpdate?.(
+          `Before this call they ticked the following on the page: ${picked.join("; ")}. Do not ask them to list their problems again — acknowledge these, pick the one worth digging into, and go from there.`,
+        );
+      }
     } catch {
       micStream.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
       setStream(null);
-      setConnecting(false);
+      setPhase("blocked");
       setBlocked("unavailable");
     }
   }, [teardown]);
 
+  // Opened from the verdict band further down the page. The parent holds a
+  // handle and calls it from a click, rather than us watching a prop and
+  // starting a microphone session from inside an effect.
+  const phaseRef = useRef<Phase>(phase);
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+
+  useEffect(() => {
+    if (!startRef) {
+      return;
+    }
+    startRef.current = () => {
+      const now = phaseRef.current;
+      if (now === "idle" || now === "done" || now === "blocked") {
+        void start();
+      }
+    };
+    return () => {
+      startRef.current = null;
+    };
+  }, [startRef, start]);
+
   const speaking = live && mode === "speaking";
-  // `connecting` has to be tested first. It was tested after `live`, and
-  // `live` is false for the whole time we are connecting — so "thinking" could
-  // never be reached and pressing Talk left the waveform sitting in idle.
-  const waveState: WaveState = connecting
-    ? "thinking"
-    : !live
-      ? "idle"
-      : mode === "speaking"
-        ? "speaking"
-        : "listening";
+
+  const waveState: WaveState =
+    phase === "connecting"
+      ? "thinking"
+      : phase === "live"
+        ? speaking
+          ? "speaking"
+          : "listening"
+        : "idle";
+
+  // One line, one meaning, never two states sharing a string.
+  const statusLine =
+    phase === "requesting_mic"
+      ? "Allow the microphone"
+      : phase === "connecting"
+        ? "One second"
+        : phase === "live"
+          ? speaking
+            ? "Casey is talking"
+            : "Listening"
+          : null;
 
   const recent = turns.slice(-2);
   const clock = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
   return (
-    <div className={styles.casey}>
-      {/* Connecting gets a status line of its own. Pressing Talk and waiting
-          for the microphone prompt used to change nothing above the button. */}
-      {live || connecting ? (
+    <div className={styles.casey} data-phase={phase}>
+      {statusLine ? (
         <p className={styles.status}>
-          <span>
-            {connecting
-              ? "Connecting — allow the microphone"
-              : speaking
-                ? "Casey is talking"
-                : "Listening"}
+          {/* Keyed so the text crossfades rather than snapping between states. */}
+          <span key={statusLine} className={styles.statusText}>
+            {statusLine}
           </span>
-          <span>{connecting ? "" : clock}</span>
+          <span>{live ? clock : ""}</span>
         </p>
       ) : null}
 
@@ -230,7 +313,24 @@ export function CaseyLauncher({
               className={styles.stopBtn}
               onClick={() => void teardown()}
             >
-              End conversation
+              I&apos;m done
+            </button>
+          </div>
+        </>
+      ) : phase === "done" ? (
+        <>
+          <p className={styles.lead}>
+            That&apos;s it. Your read is on the page below — and if you want
+            fifteen minutes with Dave, just ask her.
+          </p>
+          <div className={styles.controls}>
+            <button
+              type="button"
+              className={styles.talkBtn}
+              onClick={() => void start()}
+            >
+              <span className={styles.dot} aria-hidden="true" />
+              Talk again
             </button>
           </div>
         </>
@@ -245,27 +345,54 @@ export function CaseyLauncher({
               type="button"
               className={styles.talkBtn}
               onClick={() => void start()}
-              disabled={connecting}
+              disabled={busy}
             >
               <span className={styles.dot} aria-hidden="true" />
-              {connecting ? "Connecting…" : "Talk to Casey"}
+              {phase === "requesting_mic"
+                ? "Allow microphone…"
+                : phase === "connecting"
+                  ? "Connecting…"
+                  : "Talk to Casey"}
             </button>
           </div>
-          <p className={styles.lead}>
-            Tell her what your week looks like. She&apos;ll tell you straight
-            where AI helps, and where it doesn&apos;t.
-          </p>
-          {/* The disclosure lives here rather than in her opening line: the
-              visitor reads it before pressing, so she can open like a person
-              instead of a compliance notice. She never denies it if asked. */}
-          <p className={styles.hint}>
-            Casey is an AI assistant. Press once and talk normally.
-          </p>
+
+          {/* A blocked microphone is a dead end unless we hand over a route
+              that does not need one. This is a callout with real buttons, not
+              a grey sentence somebody has to notice. */}
           {blocked ? (
-            <p className={styles.note} role="status">
-              {CASEY_BLOCK_COPY[blocked]}
-            </p>
-          ) : null}
+            <div className={styles.callout} role="alert">
+              <p className={styles.calloutText}>{CASEY_BLOCK_COPY[blocked]}</p>
+              <div className={styles.controls}>
+                <button
+                  type="button"
+                  className={styles.calloutPrimary}
+                  onClick={() => onNeedList?.()}
+                >
+                  Use the list instead
+                </button>
+                <button
+                  type="button"
+                  className={styles.stopBtn}
+                  onClick={() => void start()}
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className={styles.lead}>
+                Tell her what your week looks like. She&apos;ll tell you
+                straight where AI helps, and where it doesn&apos;t.
+              </p>
+              {/* The disclosure lives here rather than in her opening line: the
+                  visitor reads it before pressing, so she can open like a person
+                  instead of a compliance notice. She never denies it if asked. */}
+              <p className={styles.hint}>
+                Casey is an AI assistant. Press once and talk normally.
+              </p>
+            </>
+          )}
         </>
       )}
     </div>
