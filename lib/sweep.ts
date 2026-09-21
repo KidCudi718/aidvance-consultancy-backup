@@ -50,7 +50,7 @@ function briefFrom(record: ReturnType<typeof distill>): Briefing {
  * conversations that ran up to the wire.
  */
 export async function runSweep(
-  args: { lookbackMinutes?: number } = {},
+  args: { lookbackMinutes?: number; quiet?: boolean } = {},
 ): Promise<SweepResult> {
   const agentId = process.env.SPEKO_AGENT_ID;
   const result: SweepResult = {
@@ -100,7 +100,7 @@ export async function runSweep(
 
     // A booking already mailed him a full briefing when the event was made.
     // Mailing again would train him to skim the ones that matter.
-    if (record.outcome !== "booked") {
+    if (!args.quiet && record.outcome !== "booked") {
       await alertDave({
         brief: briefFrom(record),
         kind: record.outcome === "email" ? "email" : "conversation",

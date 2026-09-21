@@ -40,10 +40,15 @@ async function handle(request: Request): Promise<Response> {
   const lookbackMinutes =
     Number.isFinite(asked) && asked > 0 ? Math.min(asked, 60 * 24 * 7) : 1500;
 
-  const result = await runSweep({ lookbackMinutes });
+  // Backfilling history should not fire a week of alerts at once. Writing the
+  // records down is the point; the emails only make sense for conversations
+  // Dave has not already seen happen.
+  const quiet = new URL(request.url).searchParams.get("quiet") === "1";
+
+  const result = await runSweep({ lookbackMinutes, quiet });
 
   return Response.json(
-    { ok: true, lookbackMinutes, ...result },
+    { ok: true, lookbackMinutes, quiet, ...result },
     { headers: { "Cache-Control": "no-store" } },
   );
 }
