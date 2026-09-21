@@ -505,7 +505,7 @@ a:hover {
 
 .split li::before,
 .prose li::before {
-  content: "\2014";
+  content: "—";
   position: absolute;
   left: 0;
 }
@@ -979,7 +979,7 @@ a:hover {
 }
 
 /* Casey first on small screens. She was below a full-height serif block, so
-   on a phone the live agent \2014 the thing this page is actually for \2014 started
+   on a phone the live agent — the thing this page is actually for — started
    off-screen and you had to scroll to find out she existed. */
 .hero--split .picker {
   order: -1;
@@ -1003,7 +1003,7 @@ a:hover {
     order: 0;
     /* Centred rather than pinned to the top. Top-aligned, the panel left a
        third of its column empty and the headline opposite it carried all the
-       visual weight \2014 the column was wider but the page still pointed left. */
+       visual weight — the column was wider but the page still pointed left. */
     display: flex;
     flex-direction: column;
     justify-content: center;
