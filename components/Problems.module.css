@@ -75,7 +75,7 @@
 
 /* Hover and selected used to be the same rule, so a square under the cursor
    was indistinguishable from one you had chosen. You could not tell what you
-   had picked without moving the mouse away \2014 which is most of why the grid
+   had picked without moving the mouse away — which is most of why the grid
    read as decoration. They are now separate states.
 
    Hover: an inset hairline. "You can pick this."
