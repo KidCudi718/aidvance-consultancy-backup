@@ -47,6 +47,10 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
+  transition:
+    background 120ms ease,
+    color 120ms ease,
+    box-shadow 120ms ease;
 }
 
 @media (min-width: 620px) {
@@ -69,10 +73,68 @@
   }
 }
 
-.tile:hover,
+/* Hover and selected used to be the same rule, so a square under the cursor
+   was indistinguishable from one you had chosen. You could not tell what you
+   had picked without moving the mouse away — which is most of why the grid
+   read as decoration. They are now separate states.
+
+   Hover: an inset hairline. "You can pick this."
+   Selected: full invert. "You picked this."
+   Pressed: the ring thickens for the length of the press. */
+
+@media (hover: hover) {
+  .tile:not([aria-pressed="true"]):hover {
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+
+  .tile:not([aria-pressed="true"]):hover .label {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+}
+
+.tile:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 0 0 3px var(--ink);
+}
+
 .tile[aria-pressed="true"] {
   background: var(--ink);
   color: var(--bg);
+}
+
+.tile[aria-pressed="true"]:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--bg);
+}
+
+@media (hover: hover) {
+  .tile[aria-pressed="true"]:hover {
+    box-shadow: inset 0 0 0 2px var(--bg);
+  }
+}
+
+.tile:active {
+  box-shadow: inset 0 0 0 4px var(--ink);
+}
+
+.tile[aria-pressed="true"]:active {
+  box-shadow: inset 0 0 0 4px var(--bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile {
+    transition: none;
+  }
+}
+
+/* The running count under the heading. Mono, so it reads as a number and not
+   as another sentence. */
+.tally {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  letter-spacing: 0.08em;
+  color: var(--ink);
 }
 
 .n {
