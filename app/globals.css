@@ -505,7 +505,7 @@ a:hover {
 
 .split li::before,
 .prose li::before {
-  content: "—";
+  content: "\2014";
   position: absolute;
   left: 0;
 }
@@ -976,6 +976,52 @@ a:hover {
   flex-direction: column;
   justify-content: space-between;
   border-bottom: 1px solid var(--ink);
+}
+
+/* Casey first on small screens. She was below a full-height serif block, so
+   on a phone the live agent \2014 the thing this page is actually for \2014 started
+   off-screen and you had to scroll to find out she existed. */
+.hero--split .picker {
+  order: -1;
+}
+
+/* With Casey already above it, the jump link on a phone is a button that
+   scrolls upwards to something you just scrolled past. It only earns its
+   place on desktop, where she sits in the other column. */
+.hero--split .hero__hook .actions {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .hero--split .hero__hook .actions {
+    display: flex;
+  }
+}
+
+@media (min-width: 900px) {
+  .hero--split .picker {
+    order: 0;
+    /* Centred rather than pinned to the top. Top-aligned, the panel left a
+       third of its column empty and the headline opposite it carried all the
+       visual weight \2014 the column was wider but the page still pointed left. */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* The headline sits low and quiet against her. */
+  .hero--split .hero__hook {
+    justify-content: center;
+    gap: 2.5rem;
+  }
+}
+
+/* The headline supports Casey instead of competing with her. At the full
+   display scale it won the eye every time, which is exactly backwards on a
+   page whose primary action is the agent. */
+.hero--split .hero__hook .display {
+  font-size: clamp(1.9rem, 3.4vw, 3.05rem);
+  max-width: 17ch;
 }
 
 .hero-beat {
@@ -1450,8 +1496,11 @@ a:hover {
 }
 
 @media (min-width: 900px) {
+  /* Casey takes ~59% of the fold. She was on the narrower side of a near-even
+     split while carrying a display-scale headline opposite her, which is why
+     a two-second glance landed on the words and not on the thing to press. */
   .hero--split {
-    grid-template-columns: 1.05fr 0.95fr;
+    grid-template-columns: 0.82fr 1.18fr;
     min-height: min(86vh, 46rem);
   }
 
