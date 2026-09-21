@@ -15,10 +15,13 @@ const BAR_COUNT = 44;
  * - `speaking` is driven off her real output audio when we can reach the
  *   element the transport attaches to the page; if we cannot, it falls back to
  *   a speech-shaped envelope rather than pretending to be silent.
- * - `idle` breathes: a slow travelling swell, well below speaking amplitude.
- *   It says "ready" without claiming to hear anything, which a flat line did
- *   not - that read as broken rather than waiting.
+ * - `idle` is static. Motion here is the panel implying it is doing something
+ *   while it is doing nothing, and on this site of all sites that is the one
+ *   lie we cannot tell. The resting line is held above zero so it reads as
+ *   waiting rather than broken.
  * - `thinking` is slow and shallow — without it a pause reads as a crash.
+ *
+ * The four states must never look alike. That is the whole contract.
  */
 export function Waveform({
   state,
@@ -35,7 +38,12 @@ export function Waveform({
   const outAnalyserRef = useRef<AnalyserNode | null>(null);
   const stateRef = useRef<WaveState>(state);
 
-  stateRef.current = state;
+  // The animation loop reads this every frame rather than re-subscribing on
+  // each state change. Writing it during render is a React correctness bug;
+  // an effect runs after commit, which is soon enough for a 60fps loop.
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const setBar = (index: number, scale: number) => {
     const bar = barsRef.current[index];
@@ -122,16 +130,14 @@ export function Waveform({
   }, [state]);
 
   useEffect(() => {
+    // Reduced motion used to paint the bars once and bail out of the loop
+    // entirely, which froze them in whatever state was mounted — idle, always.
+    // Someone on reduced motion could talk to Casey and never see the panel
+    // acknowledge it. The loop now runs for everyone; reduced motion gets a
+    // distinct static shape per state instead of no state at all.
     const reduced =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (reduced) {
-      for (let i = 0; i < BAR_COUNT; i += 1) {
-        setBar(i, stateRef.current === "idle" ? 0.16 : 0.5);
-      }
-      return;
-    }
 
     const micBins = new Uint8Array(64);
     const outBins = new Uint8Array(64);
@@ -143,17 +149,36 @@ export function Waveform({
       const current = stateRef.current;
 
       if (current === "idle") {
-        // Slow enough that nobody mistakes it for a live microphone, visible
-        // enough that the panel looks awake.
+        // Static. The travelling swell that used to live here was the panel
+        // claiming to be doing something while nothing was happening — the
+        // one animation on the page that could be read as "she can hear you"
+        // when she demonstrably could not. A resting line says ready without
+        // saying listening.
         for (let i = 0; i < BAR_COUNT; i += 1) {
-          const swell = Math.sin(elapsed * 1.15 - i * 0.28);
-          const drift = Math.sin(elapsed * 0.45 + i * 0.07);
-          setBar(i, 0.16 + swell * 0.1 + drift * 0.05);
+          setBar(i, 0.14);
         }
       } else if (current === "thinking") {
+        if (reduced) {
+          // A shallow, even line — plainly not idle, plainly not speech.
+          for (let i = 0; i < BAR_COUNT; i += 1) {
+            setBar(i, 0.3);
+          }
+        } else {
+          for (let i = 0; i < BAR_COUNT; i += 1) {
+            const wobble = Math.sin(elapsed * 1.6 + i * 0.35);
+            setBar(i, 0.12 + wobble * 0.05 + 0.06);
+          }
+        }
+      } else if (reduced) {
+        // Listening reads as an even band; speaking as a centre-weighted arc.
+        // Different silhouettes, no motion in either.
         for (let i = 0; i < BAR_COUNT; i += 1) {
-          const wobble = Math.sin(elapsed * 1.6 + i * 0.35);
-          setBar(i, 0.12 + wobble * 0.05 + 0.06);
+          if (current === "listening") {
+            setBar(i, 0.55);
+          } else {
+            const centre = 1 - Math.abs(i / (BAR_COUNT - 1) - 0.5) * 1.4;
+            setBar(i, Math.max(0.18, 0.9 * Math.max(0.2, centre)));
+          }
         }
       } else {
         const analyser =
