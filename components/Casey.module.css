@@ -90,6 +90,40 @@
   color: var(--ink);
 }
 
+/* Press feedback. The gap between pressing Talk and the microphone prompt
+   appearing is dead air, and a button that does not acknowledge the press
+   invites a second press. */
+.talkBtn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 0 0 3px var(--bg);
+}
+
+.talkBtn:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 0 0 3px var(--bg);
+}
+
+.talkBtn[disabled] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+/* The panel is only ever outlined while a session is actually running, so the
+   outline means exactly one thing. */
+.wave[data-state="listening"],
+.wave[data-state="speaking"],
+.wave[data-state="thinking"] {
+  box-shadow:
+    inset 0 1px 0 var(--ink),
+    inset 0 -1px 0 var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talkBtn:active {
+    transform: none;
+  }
+}
+
 .stopBtn {
   display: inline-flex;
   align-items: center;
