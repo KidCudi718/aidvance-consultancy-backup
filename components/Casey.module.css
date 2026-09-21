@@ -1,4 +1,4 @@
-/* Casey's own styles. Black, white and the site's existing neutrals only —
+/* Casey's own styles. Black, white and the site's existing neutrals only \2014
    no accent hue anywhere in this feature. Tokens come from globals.css. */
 
 .casey {
@@ -7,11 +7,14 @@
   padding: 1.35rem 0 0;
 }
 
+/* The waveform is the panel's presence. At 6.5rem it read as a rule with
+   texture, which is why a wider column still lost the glance to the headline
+   opposite it. It needs enough height to be the first thing the eye lands on. */
 .wave {
   display: flex;
   align-items: center;
   gap: 3px;
-  height: 6.5rem;
+  height: clamp(6.5rem, 14vh, 11rem);
   padding-block: 1.25rem;
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
@@ -124,6 +127,118 @@
   }
 }
 
+/* Micro #3 \2014 the status line crossfades instead of snapping. The element is
+   keyed on its own text in the component, so React remounts it and this runs
+   on every genuine state change and never on a re-render that changed
+   nothing. */
+.statusText {
+  animation: statusIn 180ms ease both;
+}
+
+@keyframes statusIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Micro #2 \2014 a hairline ring around the panel, and only while a session is
+   actually running. It is the panel's one piece of "this is live" and it is
+   never on when she cannot hear you. */
+.casey[data-phase="live"] {
+  box-shadow: inset 0 0 0 1px var(--ink);
+  padding: 1.35rem 1.1rem 1.25rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .casey {
+    transition:
+      box-shadow 140ms ease,
+      padding 140ms ease;
+  }
+}
+
+/* Micro #5 \2014 the no-microphone fallback, as a callout with real buttons.
+   It used to be a grey sentence, which is the "styled as a whisper" failure:
+   someone who blocks the mic hits a dead end and never learns the list is
+   right there. */
+.callout {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.1rem 1.15rem 1.2rem;
+  border: 1px solid var(--ink);
+  background: var(--bg);
+  animation: calloutIn 200ms ease both;
+}
+
+@keyframes calloutIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .callout,
+  .statusText {
+    animation: none;
+  }
+
+  .casey {
+    transition: none;
+  }
+}
+
+.calloutText {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.1rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.calloutPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.calloutPrimary:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.calloutPrimary:active {
+  transform: translateY(1px);
+}
+
+.calloutPrimary:focus-visible,
+.stopBtn:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 0 0 3px var(--bg);
+}
+
 .stopBtn {
   display: inline-flex;
   align-items: center;
@@ -207,7 +322,7 @@
   line-height: 1.5;
 }
 
-/* The list never goes away — it just moves one click down. */
+/* The list never goes away \2014 it just moves one click down. */
 .listToggle {
   display: inline-flex;
   align-items: center;
