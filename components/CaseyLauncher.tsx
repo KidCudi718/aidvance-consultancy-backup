@@ -169,10 +169,13 @@ export function CaseyLauncher({
   }, [teardown]);
 
   const speaking = live && mode === "speaking";
-  const waveState: WaveState = !live
-    ? "idle"
-    : connecting
-      ? "thinking"
+  // `connecting` has to be tested first. It was tested after `live`, and
+  // `live` is false for the whole time we are connecting — so "thinking" could
+  // never be reached and pressing Talk left the waveform sitting in idle.
+  const waveState: WaveState = connecting
+    ? "thinking"
+    : !live
+      ? "idle"
       : mode === "speaking"
         ? "speaking"
         : "listening";
@@ -182,10 +185,18 @@ export function CaseyLauncher({
 
   return (
     <div className={styles.casey}>
-      {live ? (
+      {/* Connecting gets a status line of its own. Pressing Talk and waiting
+          for the microphone prompt used to change nothing above the button. */}
+      {live || connecting ? (
         <p className={styles.status}>
-          <span>{speaking ? "Casey is talking" : "Listening"}</span>
-          <span>{clock}</span>
+          <span>
+            {connecting
+              ? "Connecting — allow the microphone"
+              : speaking
+                ? "Casey is talking"
+                : "Listening"}
+          </span>
+          <span>{connecting ? "" : clock}</span>
         </p>
       ) : null}
 
