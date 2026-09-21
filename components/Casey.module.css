@@ -1,4 +1,4 @@
-/* Casey's own styles. Black, white and the site's existing neutrals only \2014
+/* Casey's own styles. Black, white and the site's existing neutrals only —
    no accent hue anywhere in this feature. Tokens come from globals.css. */
 
 .casey {
@@ -127,7 +127,7 @@
   }
 }
 
-/* Micro #3 \2014 the status line crossfades instead of snapping. The element is
+/* Micro #3 — the status line crossfades instead of snapping. The element is
    keyed on its own text in the component, so React remounts it and this runs
    on every genuine state change and never on a re-render that changed
    nothing. */
@@ -147,7 +147,7 @@
   }
 }
 
-/* Micro #2 \2014 a hairline ring around the panel, and only while a session is
+/* Micro #2 — a hairline ring around the panel, and only while a session is
    actually running. It is the panel's one piece of "this is live" and it is
    never on when she cannot hear you. */
 .casey[data-phase="live"] {
@@ -163,7 +163,7 @@
   }
 }
 
-/* Micro #5 \2014 the no-microphone fallback, as a callout with real buttons.
+/* Micro #5 — the no-microphone fallback, as a callout with real buttons.
    It used to be a grey sentence, which is the "styled as a whisper" failure:
    someone who blocks the mic hits a dead end and never learns the list is
    right there. */
@@ -322,7 +322,7 @@
   line-height: 1.5;
 }
 
-/* The list never goes away \2014 it just moves one click down. */
+/* The list never goes away — it just moves one click down. */
 .listToggle {
   display: inline-flex;
   align-items: center;
