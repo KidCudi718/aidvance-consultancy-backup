@@ -15,14 +15,18 @@ import type { PickerKey } from "@/lib/verdict";
  * qualification plus the close runs four to five minutes; three minutes cut her
  * off mid-recommendation, which wastes the whole conversation. At $0.09/min the
  * difference is pennies, so the cap is here for abandoned tabs and bots.
+ *
+ * Raised to fifteen minutes while we test whether a conversation that follows
+ * the visitor rather than a question list can stay good for longer. Six
+ * minutes is a scripted call's length; this is not that experiment.
  */
-export const CASEY_MAX_SESSION_SECONDS = 360;
+export const CASEY_MAX_SESSION_SECONDS = 900;
 
 /**
  * When to tell her time is short. A full minute of runway, so she can finish
  * the thought she is on and still close properly.
  */
-export const CASEY_WRAP_UP_SECONDS = 300;
+export const CASEY_WRAP_UP_SECONDS = 840;
 
 /**
  * Casey is told to say one of these labels verbatim when she confirms which
