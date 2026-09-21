@@ -34,6 +34,9 @@ export function StartJourney() {
     }
   }, [otherPicked]);
 
+  // The verdict band was always here. It just sat below the fold on desktop,
+  // so ticking a square looked like it did nothing — the payoff was real and
+  // off-screen. Now the first tick brings it into view at any width.
   const scrollVerdictIfNeeded = useCallback(() => {
     if (!firstTick.current) {
       return;
@@ -42,10 +45,14 @@ export function StartJourney() {
     if (typeof window === "undefined") {
       return;
     }
-    if (!window.matchMedia("(max-width: 879px)").matches) {
-      return;
-    }
-    verdictRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Let the band mount before we try to scroll to it.
+    window.requestAnimationFrame(() => {
+      verdictRef.current?.scrollIntoView({
+        behavior: reduced ? "auto" : "smooth",
+        block: "start",
+      });
+    });
   }, []);
 
   const toggle = (key: PickerKey) => {
@@ -87,9 +94,14 @@ export function StartJourney() {
               <strong>They&apos;re not.</strong>
             </span>
           </h1>
+          {/*
+            This jumps to Casey. It is not the mic. Two controls reading
+            "Talk to Casey" and doing different things taught visitors the
+            page was lying about one of them.
+          */}
           <div className="actions">
             <a className="btn btn--solid" href="#start">
-              Talk to Casey →
+              Start the 2-minute chat →
             </a>
           </div>
         </div>
@@ -107,8 +119,20 @@ export function StartJourney() {
       <section className={styles.section} id="problems">
         <div className="shell">
           <h2 className="display display--md">What&apos;s eating your week?</h2>
-          <p className={styles.hint}>
-            Pick everything that applies. Most weeks have more than one.
+          {/*
+            Feedback where the hand is. Scrolling to the band is the payoff,
+            but the count changes under the heading the instant a square is
+            ticked, so the page answers before the scroll starts.
+          */}
+          <p className={styles.hint} aria-live="polite">
+            {count === 0 ? (
+              "Pick everything that applies. Most weeks have more than one."
+            ) : (
+              <>
+                <span className={styles.tally}>{count}</span> picked. Your read
+                is below.
+              </>
+            )}
           </p>
         </div>
         <div
