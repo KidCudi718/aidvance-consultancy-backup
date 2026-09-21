@@ -19,8 +19,13 @@ type Picked = Partial<Record<PickerKey, boolean>>;
 export function StartJourney() {
   const [picked, setPicked] = useState<Picked>({});
   const [otherText, setOtherText] = useState("");
+  // A handle Casey fills in, so the verdict band can open her from a click
+  // rather than by toggling a prop she watches.
+  const caseyStart = useRef<(() => void) | null>(null);
   const firstTick = useRef(true);
   const verdictRef = useRef<HTMLElement>(null);
+  const problemsRef = useRef<HTMLElement>(null);
+  const caseyRef = useRef<HTMLDivElement>(null);
   const otherFieldRef = useRef<HTMLInputElement>(null);
   const otherFieldId = useId();
   const otherPicked = Boolean(picked.other);
@@ -78,6 +83,42 @@ export function StartJourney() {
   const count = selectedKeys.length + (otherPicked ? 1 : 0);
   const other = otherPicked ? otherVerdict(otherText) : null;
 
+  // What they ticked, in their own words from the list, handed to Casey so she
+  // opens where the page left off instead of asking the same question again.
+  const contextLabels = pickerRows
+    .filter((row) => picked[row.key])
+    .map((row) =>
+      row.key === "other" && otherText.trim()
+        ? `Something else: ${otherText.trim()}`
+        : row.label,
+    );
+
+  // The verdict band's call to action: scroll to her, then open the session.
+  const talkAboutThis = useCallback(() => {
+    if (typeof window !== "undefined") {
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      caseyRef.current?.scrollIntoView({
+        behavior: reduced ? "auto" : "smooth",
+        block: "start",
+      });
+    }
+    caseyStart.current?.();
+  }, []);
+
+  // Where someone goes when the microphone is not an option.
+  const goToList = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    problemsRef.current?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  }, []);
+
   return (
     <>
       {/*
@@ -106,9 +147,14 @@ export function StartJourney() {
           </div>
         </div>
 
-        <div className="picker hp2" id="start">
+        <div className="picker hp2" id="start" ref={caseyRef}>
           <p className="kicker">Casey · 2 minutes</p>
-          <CaseyLauncher onCategory={handleCaseyCategory} />
+          <CaseyLauncher
+            onCategory={handleCaseyCategory}
+            contextLabels={contextLabels}
+            startRef={caseyStart}
+            onNeedList={goToList}
+          />
         </div>
       </section>
 
@@ -116,7 +162,7 @@ export function StartJourney() {
         The list is the page, not a fallback. Nine squares a visitor can read
         in ten seconds and recognise three of.
       */}
-      <section className={styles.section} id="problems">
+      <section className={styles.section} id="problems" ref={problemsRef}>
         <div className="shell">
           <h2 className="display display--md">What&apos;s eating your week?</h2>
           {/*
@@ -240,10 +286,19 @@ export function StartJourney() {
                 </li>
               ) : null}
             </ol>
+            {/*
+              Not an anchor. This carries what they ticked up to Casey and
+              opens the session, so she starts from their answers instead of
+              asking for them a second time.
+            */}
             <div className="vcta">
-              <a className="btn btn--invert" href="#start">
-                Tell Casey and she&apos;ll take it from here →
-              </a>
+              <button
+                type="button"
+                className="btn btn--invert"
+                onClick={talkAboutThis}
+              >
+                Talk to Casey about this →
+              </button>
             </div>
           </div>
         </section>
