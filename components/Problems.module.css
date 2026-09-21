@@ -75,7 +75,7 @@
 
 /* Hover and selected used to be the same rule, so a square under the cursor
    was indistinguishable from one you had chosen. You could not tell what you
-   had picked without moving the mouse away — which is most of why the grid
+   had picked without moving the mouse away \2014 which is most of why the grid
    read as decoration. They are now separate states.
 
    Hover: an inset hairline. "You can pick this."
@@ -159,6 +159,31 @@
   right: 1.4rem;
   font-family: var(--mono);
   font-size: 0.85rem;
+}
+
+/* Selection snap, borrowed from React Bits' SpringCheck and rebuilt in the
+   site's own black and white. The tick overshoots once and settles, so a
+   choice registers as a choice rather than a repaint. */
+.tile[aria-pressed="true"] .mark {
+  animation: snap 220ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+@keyframes snap {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile[aria-pressed="true"] .mark {
+    animation: none;
+  }
 }
 
 .other {
